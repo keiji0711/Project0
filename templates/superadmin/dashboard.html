@@ -1,0 +1,75 @@
+<!-- File: superadmin/dashboard.html
+     Purpose: Superadmin dashboard. Extends `base.html`. Two-column layout with sidebar and main
+     content showing a schools management table. Visual-only toggle and Add School accent button.
+-->
+{% extends 'base.html' %}
+{% block title %}Superadmin — Dashboard{% endblock %}
+
+{% block content %}
+  <div class="lg:flex lg:space-x-6">
+    <aside class="mb-6 lg:mb-0 lg:w-64 bg-[color:var(--color-secondary)] text-white rounded-lg p-4">
+      <h3 class="font-semibold text-lg">Super Admin</h3>
+      <nav class="mt-4 space-y-2" aria-label="Superadmin navigation">
+        <a href="#" class="block py-2 px-3 rounded-md bg-[color:var(--color-secondary)]/90">Schools</a>
+        <a href="#" class="block py-2 px-3 rounded-md hover:bg-white/10">Subscriptions</a>
+        <a href="#" class="block py-2 px-3 rounded-md hover:bg-white/10">Users</a>
+        <a href="#" class="block py-2 px-3 rounded-md hover:bg-white/10">Settings</a>
+      </nav>
+    </aside>
+
+    <div class="flex-1">
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="text-xl font-semibold" style="color:var(--color-secondary)">Schools management</h2>
+        <div class="flex items-center gap-3">
+          <a href="#" class="inline-flex items-center px-3 py-2 rounded-md font-medium" style="background-color:var(--color-accent)">Add School</a>
+        </div>
+      </div>
+
+      <div class="overflow-x-auto bg-white rounded-lg shadow-sm">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50">
+            <tr>
+              <th scope="col" class="px-4 py-3 text-left text-sm font-medium">School Name</th>
+              <th scope="col" class="px-4 py-3 text-left text-sm font-medium">Status</th>
+              <th scope="col" class="px-4 py-3 text-left text-sm font-medium">Subscription</th>
+              <th scope="col" class="px-4 py-3 text-left text-sm font-medium">Actions</th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-100">
+            {% for school in schools if schools is defined else range(1,4) %}
+            <tr>
+              <td class="px-4 py-3 text-sm">{{ school.name if schools is defined else 'Sample School ' ~ loop.index }}</td>
+              <td class="px-4 py-3 text-sm">
+                <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">Active</span>
+              </td>
+              <td class="px-4 py-3 text-sm">
+                <div class="flex items-center gap-3">
+                  <span>Paid</span>
+                  <!-- Visual-only toggle style -->
+                  <div class="ml-3 inline-flex items-center rounded-full p-1 bg-gray-200" role="switch" aria-checked="true" tabindex="0">
+                    <div class="h-4 w-4 rounded-full bg-white shadow-sm" style="transform:translateX(0)"></div>
+                  </div>
+                </div>
+              </td>
+              <td class="px-4 py-3 text-sm">
+                <a href="#" class="text-[color:var(--color-primary)]">View</a>
+                <span class="mx-2 text-slate-300">|</span>
+                <a href="#" class="text-slate-600">Edit</a>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+      <div class="mt-4 flex items-center justify-end">
+        <nav class="inline-flex -space-x-px rounded-md" aria-label="Pagination">
+          <a href="#" class="px-3 py-2 rounded-l-md border border-gray-200 bg-white text-sm">Previous</a>
+          <a href="#" class="px-3 py-2 border-t border-b border-gray-200 bg-white text-sm">1</a>
+          <a href="#" class="px-3 py-2 border border-gray-200 bg-white text-sm">2</a>
+          <a href="#" class="px-3 py-2 rounded-r-md border border-gray-200 bg-white text-sm">Next</a>
+        </nav>
+      </div>
+    </div>
+  </div>
+{% endblock %}

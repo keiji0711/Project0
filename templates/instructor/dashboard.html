@@ -1,0 +1,43 @@
+<!-- File: instructor/dashboard.html
+     Purpose: Instructor dashboard. Extends `base.html`. Contains sidebar and "Today's Classes" list with
+     visual-only Open Attendance buttons.
+-->
+{% extends 'base.html' %}
+{% block title %}Instructor — Dashboard{% endblock %}
+
+{% block content %}
+  <div class="lg:flex lg:space-x-6">
+    <aside class="mb-6 lg:mb-0 lg:w-64 bg-white rounded-lg p-4 shadow-sm">
+      <h3 class="font-semibold text-lg" style="color:var(--color-secondary)">Instructor</h3>
+      <nav class="mt-4 space-y-2" aria-label="Instructor navigation">
+        <a href="#" class="block py-2 px-3 rounded-md hover:bg-[color:var(--color-bg)]">Today's Classes</a>
+        <a href="#" class="block py-2 px-3 rounded-md hover:bg-[color:var(--color-bg)]">Attendance</a>
+        <a href="#" class="block py-2 px-3 rounded-md hover:bg-[color:var(--color-bg)]">Schedule</a>
+      </nav>
+    </aside>
+
+    <div class="flex-1">
+      <div class="mb-4">
+        <h2 class="text-xl font-semibold" style="color:var(--color-secondary)">Today's Classes</h2>
+        <p class="text-sm text-slate-600">{{ current_date if current_date is defined else 'Today' }}</p>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        {% for cl in todays_classes if todays_classes is defined else range(1,4) %}
+        <article class="bg-white rounded-lg p-4 shadow-sm">
+          <div class="flex items-start justify-between">
+            <div>
+              <h3 class="font-semibold">{{ cl.name if todays_classes is defined else 'Mathematics' }}</h3>
+              <p class="text-sm text-slate-600">{{ cl.time if todays_classes is defined else '08:00 — 09:00' }}</p>
+              <p class="mt-2 text-sm text-slate-500">{{ cl.section if todays_classes is defined else 'Section A' }}</p>
+            </div>
+            <div class="ml-4 flex items-center">
+              <a href="#" class="inline-flex items-center px-3 py-2 rounded-md text-white font-medium" style="background-color:var(--color-primary)">Open Attendance</a>
+            </div>
+          </div>
+        </article>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+{% endblock %}

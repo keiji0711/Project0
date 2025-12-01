@@ -1,0 +1,136 @@
+{% from 'schooladmin/_nav.html' import admin_sidebar %}
+<!doctype html>
+<html lang="en" class="h-full">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>{% if self.page_title is defined %}{{ self.page_title() }} — {% endif %}AttendGuard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root{
+      --color-primary: #2563EB; /* blue-600 */
+      --color-secondary: #1E40AF; /* blue-800 */
+      --color-bg: #F8FAFC; /* slate-50 */
+      --color-text: #1E293B; /* slate-800 */
+      --sidebar-width: 16rem; /* default expanded (w-64) */
+    }
+    /* Collapsed sidebar state */
+    .sidebar-collapsed {
+      --sidebar-width: 4rem; /* collapsed width (w-16) */
+    }
+    /* Hide labels when collapsed */
+    .sidebar-collapsed .admin-label { display: none; }
+    .sidebar-collapsed .admin-group-label { display: none; }
+    .sidebar-collapsed .admin-menu-item { justify-content: center; }
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: #f1f5f9; }
+    ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    * { transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease; }
+  </style>
+  {% block extra_head %}{% endblock %}
+  {% block page_styles %}{% endblock %}
+  {% block page_scripts_head %}{% endblock %}
+  {% block page_title %}{% endblock %}
+</head>
+<body class="h-full bg-gradient-to-br from-slate-50 to-slate-100 text-[color:var(--color-text)] antialiased">
+  <div class="min-h-full">
+    <!-- Left Admin Sidebar -->
+    {{ admin_sidebar(active_page if active_page is defined else '') }}
+
+  <!-- Right Panel -->
+  <div class="min-w-0 flex flex-col h-screen" style="margin-left: var(--sidebar-width);">
+      <!-- Admin Top Toolbar -->
+  <header class="px-4 sm:px-6 lg:px-10 xl:px-12 h-16 border-b border-slate-200 bg-white fixed top-0 right-0 z-40 flex items-center justify-between gap-3" style="left: var(--sidebar-width);">
+        <div class="flex items-center gap-3 min-w-0">
+          <!-- Sidebar toggle (desktop) -->
+          <button id="sidebarToggle" class="hidden md:inline-flex items-center justify-center w-8 h-8 rounded hover:bg-slate-100" title="Toggle sidebar">
+            <svg class="w-5 h-5 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h10M4 18h7"/></svg>
+          </button>
+          <h1 class="text-lg font-bold text-slate-900 truncate">{% if self.page_title is defined %}{{ self.page_title() }}{% else %}Admin{% endif %}</h1>
+          <span class="hidden sm:inline text-xs text-slate-500">/ School Administration</span>
+        </div>
+        <div class="flex items-center gap-6">
+          <!-- Date & Live Time -->
+          <div class="hidden md:flex flex-col items-end leading-tight">
+            <span id="dateDisplay" class="text-xs font-medium text-slate-600"></span>
+            <span id="timeDisplay" class="font-mono text-sm font-semibold text-slate-900"></span>
+          </div>
+          <!-- Profile dropdown -->
+          <div class="relative">
+            <button id="profileBtn" class="flex items-center gap-3 px-3 py-1.5 rounded-lg hover:bg-slate-100 focus:outline-none">
+              <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-blue-600 text-white text-sm font-semibold">
+                {% if current_user and current_user.initials %}{{ current_user.initials }}{% else %}AD{% endif %}
+              </span>
+              <div class="hidden sm:block text-left">
+                <div class="text-sm font-semibold text-slate-900">{% if current_user and current_user.name %}{{ current_user.name }}{% else %}Admin User{% endif %}</div>
+                <div class="text-xs text-slate-500">{% if current_user and current_user.role %}{{ current_user.role }}{% else %}Administrator{% endif %}</div>
+              </div>
+              <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+            </button>
+            <div id="profileMenu" class="absolute right-0 mt-2 w-48 bg-white border border-slate-200 rounded-lg shadow-lg py-2 hidden">
+              <a href="#" class="block px-3 py-2 text-sm text-slate-700 hover:bg-slate-100">Profile</a>
+              <div class="my-2 border-t border-slate-200"></div>
+              <a href="{{ url_for('auth.logout') }}" class="block px-3 py-2 text-sm text-red-600 hover:bg-red-50">Logout</a>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Admin Content -->
+      <main class="w-full px-4 sm:px-6 lg:px-10 xl:px-12 pt-20 pb-6 flex-1 overflow-y-auto">
+        {% block admin_content %}{% endblock %}
+      </main>
+    </div>
+  </div>
+
+  <!-- Optional footer -->
+  {% block admin_footer %}{% endblock %}
+  {% block page_scripts %}
+  <script>
+    (function(){
+      function updateClock(){
+        const now = new Date();
+        const dayNames = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+        const dateStr = dayNames[now.getDay()] + ', ' + now.toLocaleDateString(undefined,{ year:'numeric', month:'short', day:'numeric'});
+        const timeStr = now.toLocaleTimeString(undefined,{ hour:'2-digit', minute:'2-digit', second:'2-digit'});
+        const dateEl = document.getElementById('dateDisplay');
+        const timeEl = document.getElementById('timeDisplay');
+        if(dateEl) dateEl.textContent = dateStr;
+        if(timeEl) timeEl.textContent = timeStr;
+      }
+      updateClock();
+      setInterval(updateClock, 1000);
+      // Profile dropdown toggle
+      const btn = document.getElementById('profileBtn');
+      const menu = document.getElementById('profileMenu');
+      function closeMenu(){ if(menu) menu.classList.add('hidden'); }
+      function toggleMenu(){ if(menu) menu.classList.toggle('hidden'); }
+      if(btn){
+        btn.addEventListener('click', function(e){ e.stopPropagation(); toggleMenu(); });
+      }
+      document.addEventListener('click', function(){ closeMenu(); });
+      document.addEventListener('keydown', function(e){ if(e.key === 'Escape') closeMenu(); });
+
+      // Sidebar toggle
+      const toggleBtn = document.getElementById('sidebarToggle');
+      // Apply persisted state
+      try {
+        const persisted = localStorage.getItem('sidebarCollapsed');
+        if(persisted === 'true') {
+          document.body.classList.add('sidebar-collapsed');
+        }
+      } catch(_) {}
+      if(toggleBtn){
+        toggleBtn.addEventListener('click', function(){
+          document.body.classList.toggle('sidebar-collapsed');
+          try {
+            localStorage.setItem('sidebarCollapsed', document.body.classList.contains('sidebar-collapsed'));
+          } catch(_) {}
+        });
+      }
+    })();
+  </script>
+  {% endblock %}
+</body>
+</html>

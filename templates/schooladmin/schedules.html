@@ -1,0 +1,541 @@
+<!-- File: schooladmin/schedules.html
+     Purpose: Schedule management page for viewing and managing timetables
+-->
+{% extends 'schooladmin/base_admin.html' %}
+{% block title %}Manage Schedules — AttendGuard{% endblock %}
+
+{% block admin_content %}
+  <!-- 3-Card Responsive Grid -->
+  <div class="grid gap-6 lg:grid-cols-12">
+    <!-- Card 1: Instructors List -->
+  <div class="bg-white rounded-xl shadow-md border border-slate-200 flex flex-col lg:col-span-3">
+      <div class="px-5 py-4 border-b border-slate-200 flex items-center justify-between">
+        <h2 class="text-sm font-semibold tracking-wide text-slate-800 uppercase">Instructors</h2>
+        <button id="add-instructor-btn" type="button" class="inline-flex items-center gap-1 text-xs font-medium text-blue-600 hover:text-blue-700">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
+          Add
+        </button>
+      </div>
+      <div class="p-5 border-b border-slate-100">
+        <div class="relative">
+          <input type="text" placeholder="Search instructor..." class="w-full text-sm px-3 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
+          <svg class="w-4 h-4 absolute right-3 top-2.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35M10 18a8 8 0 100-16 8 8 0 000 16z"/></svg>
+        </div>
+      </div>
+      <ul class="flex-1 overflow-auto divide-y divide-slate-100" id="instructor-list">
+        {% for inst in instructors %}
+        <li class="group">
+          <button class="w-full text-left px-5 py-3 instructor-item hover:bg-blue-50" data-instructor-id="{{ inst.id }}" data-instructor-name="{{ inst.name }}" data-instructor-dept="{{ inst.department }}" data-instructor-email="{{ inst.email|default('') }}" data-instructor-contact="{{ inst.contact|default('') }}" data-instructor-address="{{ inst.address|default('') }}">
+            <div class="flex items-center gap-3">
+              <!-- Minimal avatar with initials -->
+              <div class="w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-semibold {% if loop.index == 1 %}bg-blue-600{% elif loop.index == 2 %}bg-emerald-600{% elif loop.index == 3 %}bg-purple-600{% elif loop.index == 4 %}bg-orange-600{% else %}bg-indigo-600{% endif %}">
+                {{ inst.name.split(' ')[0][0] }}{{ (inst.name.split(' ')[1] if inst.name.split(' ')|length > 1 else '')[:1] }}
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="text-sm font-medium text-slate-900 truncate">{{ inst.name }}</div>
+              </div>
+              <div class="ml-auto flex items-center gap-2">
+                <span class="view-instructor-btn inline-flex items-center p-1 rounded hover:bg-blue-50 text-slate-500 hover:text-blue-600" title="View Info" role="button" tabindex="0">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7-10-7-10-7z"/></svg>
+                </span>
+                <span class="remove-instructor-btn inline-flex items-center p-1 rounded hover:bg-rose-50 text-slate-500 hover:text-rose-600" title="Remove Instructor" role="button" tabindex="0">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6M9 7h6m2 0h-2m-6 0H7m2-2h6a2 2 0 012 2H7a2 2 0 012-2z"/></svg>
+                </span>
+              </div>
+            </div>
+          </button>
+        </li>
+        {% endfor %}
+      </ul>
+      <div class="px-5 py-3 bg-slate-50 text-xs text-slate-500 border-t border-slate-200">
+        <p>Select an instructor to view subjects & weekly schedule.</p>
+      </div>
+    </div>
+    <!-- New Instructor Modal (Desktop style) -->
+    <div id="instructor-modal" class="fixed inset-0 z-50 hidden">
+      <!-- Backdrop -->
+      <div id="instructor-backdrop" class="absolute inset-0 bg-slate-900/40"></div>
+      <!-- Dialog -->
+      <div class="relative mx-auto w-full max-w-2xl mt-20 px-6">
+        <div class="bg-white rounded-xl shadow-2xl border border-slate-200 overflow-hidden">
+          <!-- Header (sticky) -->
+          <div class="px-6 py-4 border-b border-slate-200 flex items-center justify-between">
+            <div>
+              <h3 class="text-base font-semibold text-slate-900">New Instructor</h3>
+              <p class="text-xs text-slate-500">Add a new instructor’s details</p>
+            </div>
+            <button id="instructor-modal-close" type="button" class="p-2 text-slate-500 hover:text-slate-700">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+          </div>
+          <!-- Content (scrollable) -->
+          <form id="instructor-form" class="px-6 py-5 max-h-[70vh] overflow-y-auto">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label for="inst-name" class="block text-xs font-medium text-slate-700">Full Name<span class="text-rose-500"> *</span></label>
+                <input id="inst-name" name="name" type="text" required placeholder="e.g., Maria Johnson" class="mt-1 w-full px-3 py-2 text-sm rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
+              </div>
+              <div>
+                <label for="inst-gmail" class="block text-xs font-medium text-slate-700">Gmail<span class="text-rose-500"> *</span></label>
+                <input id="inst-gmail" name="gmail" type="email" required placeholder="name@gmail.com" class="mt-1 w-full px-3 py-2 text-sm rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
+              </div>
+              <div>
+                <label for="inst-contact" class="block text-xs font-medium text-slate-700">Contact Number <span class="text-slate-400">(optional)</span></label>
+                <input id="inst-contact" name="contact" type="tel" placeholder="e.g., +63 912 345 6789" class="mt-1 w-full px-3 py-2 text-sm rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
+              </div>
+              <div>
+                <label for="inst-address" class="block text-xs font-medium text-slate-700">Address</label>
+                <input id="inst-address" name="address" type="text" placeholder="Street, City, Province" class="mt-1 w-full px-3 py-2 text-sm rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
+              </div>
+              <div class="sm:col-span-2">
+                <label for="inst-notes" class="block text-xs font-medium text-slate-700">Additional Info</label>
+                <textarea id="inst-notes" name="notes" rows="4" placeholder="Notes, specialization, availability, etc." class="mt-1 w-full px-3 py-2 text-sm rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"></textarea>
+              </div>
+            </div>
+            <!-- Footer (sticky) -->
+            <div class="mt-6 pt-4 border-t border-slate-200 flex items-center justify-end gap-3">
+              <button type="button" id="instructor-cancel" class="px-3 py-2 text-xs rounded-lg border border-slate-300 text-slate-700 hover:bg-slate-50">Cancel</button>
+              <button type="submit" class="px-3 py-2 text-xs rounded-lg bg-blue-600 text-white hover:bg-blue-700">Save</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <!-- View Instructor Modal (Desktop style, read-only) -->
+    <div id="instructor-view-modal" class="fixed inset-0 z-50 hidden">
+      <!-- Backdrop -->
+      <div id="instructor-view-backdrop" class="absolute inset-0 bg-slate-900/40"></div>
+      <!-- Dialog -->
+      <div class="relative mx-auto w-full max-w-2xl mt-20 px-6">
+        <div class="bg-white rounded-xl shadow-2xl border border-slate-200 overflow-hidden">
+          <!-- Header -->
+          <div class="px-6 py-4 border-b border-slate-200 flex items-center justify-between">
+            <div>
+              <h3 class="text-base font-semibold text-slate-900">Instructor Info</h3>
+              <p class="text-xs text-slate-500">View instructor details</p>
+            </div>
+            <button id="instructor-view-close" type="button" class="p-2 text-slate-500 hover:text-slate-700">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+          </div>
+          <!-- Content -->
+          <div class="px-6 py-5 space-y-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <div class="text-xs text-slate-500">Full Name</div>
+                <div id="view-inst-name" class="text-sm font-medium text-slate-900">—</div>
+              </div>
+              <div>
+                <div class="text-xs text-slate-500">Department</div>
+                <div id="view-inst-dept" class="text-sm text-slate-900">—</div>
+              </div>
+              <div>
+                <div class="text-xs text-slate-500">Gmail</div>
+                <div id="view-inst-gmail" class="text-sm text-slate-900">—</div>
+              </div>
+              <div>
+                <div class="text-xs text-slate-500">Contact</div>
+                <div id="view-inst-contact" class="text-sm text-slate-900">—</div>
+              </div>
+              <div class="sm:col-span-2">
+                <div class="text-xs text-slate-500">Address</div>
+                <div id="view-inst-address" class="text-sm text-slate-900">—</div>
+              </div>
+            </div>
+            <div class="pt-4 border-t border-slate-200 flex items-center justify-end">
+              <button id="instructor-view-cancel" type="button" class="px-3 py-2 text-xs rounded-lg border border-slate-300 text-slate-700 hover:bg-slate-50">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 2: Subjects for Selected Instructor -->
+  <div class="bg-white rounded-xl shadow-md border border-slate-200 flex flex-col lg:col-span-3">
+      <div class="px-5 py-4 border-b border-slate-200 flex items-center justify-between">
+        <h2 class="text-sm font-semibold tracking-wide text-slate-800 uppercase">Subjects</h2>
+        <button class="inline-flex items-center gap-1 text-xs font-medium text-blue-600 hover:text-blue-700">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
+          Add
+        </button>
+      </div>
+      <div class="p-5 flex-1 flex flex-col">
+        <!-- Mock Subject Data: code + name (loop over all subjects) -->
+        <ul class="space-y-2 overflow-auto pr-1 flex-1" id="subject-list">
+          {% for sub in subjects %}
+          <li>
+            <button class="w-full text-left px-4 py-3 rounded-lg border border-slate-200 hover:border-blue-400 hover:bg-blue-50 transition group subject-item" data-subject-code="{{ sub.code }}" data-subject-name="{{ sub.name }}" data-subject-tag="{{ sub.tag }}">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-mono tracking-wide px-2 py-1 rounded {% if sub.tag == 'Core' %}bg-slate-900 text-white{% elif sub.tag == 'Advanced' %}bg-green-600 text-white{% elif sub.tag == 'Lab' %}bg-slate-700 text-white{% elif sub.tag == 'Elective' %}bg-indigo-600 text-white{% else %}bg-slate-500 text-white{% endif %}">{{ sub.code }}</span>
+                <span class="text-[10px] text-slate-500 group-hover:text-blue-600">{{ sub.tag }}</span>
+              </div>
+              <div class="mt-2 text-sm font-medium text-slate-800">{{ sub.name }}</div>
+            </button>
+          </li>
+          {% endfor %}
+        </ul>
+        <!-- Filter controls -->
+        <div class="mt-4 flex items-center gap-3">
+          <select class="px-3 py-2 text-xs border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+            <option>All Days</option>
+            <option>Monday</option>
+            <option>Tuesday</option>
+            <option>Wednesday</option>
+            <option>Thursday</option>
+            <option>Friday</option>
+          </select>
+          <!-- Actions moved to Weekly Schedule toolbar -->
+        </div>
+      </div>
+      <div class="mt-auto px-5 py-3 bg-slate-50 text-xs text-slate-500 border-t border-slate-200">
+        <p>Select an instructor, then choose a subject to assign from the Weekly Schedule toolbar.</p>
+      </div>
+    </div>
+
+    <!-- Card 3: Weekly Schedule -->
+  <div class="bg-white rounded-xl shadow-md border border-slate-200 flex flex-col overflow-hidden lg:col-span-6">
+      <div class="px-6 py-4 border-b border-slate-200 bg-gradient-to-r from-blue-50 to-blue-100 flex items-center justify-between">
+        <div>
+          <h2 class="text-lg font-bold text-slate-900" id="weekly-title">Select an Instructor</h2>
+          <p class="text-sm text-slate-600 mt-1" id="weekly-sub">No instructor selected</p>
+        </div>
+        <div class="hidden sm:flex items-center gap-2">
+          <button class="inline-flex items-center gap-2 px-3 py-2 rounded-lg bg-blue-600 text-white text-xs font-medium shadow-sm hover:bg-blue-700" id="add-slot-btn">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
+            Add Slot
+          </button>
+          <button class="inline-flex items-center gap-2 px-3 py-2 rounded-lg bg-indigo-600 text-white text-xs font-medium shadow-sm hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed" id="assign-btn" disabled>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+            Assign Subject
+          </button>
+          <button class="inline-flex items-center gap-2 px-3 py-2 rounded-lg bg-rose-600 text-white text-xs font-medium shadow-sm hover:bg-rose-700 disabled:opacity-50 disabled:cursor-not-allowed" id="remove-btn" disabled>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+            Remove Slot
+          </button>
+        </div>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="w-full">
+          <thead class="bg-slate-50 border-b border-slate-200">
+            <tr>
+              <th class="px-4 py-3 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider w-24">Time</th>
+              <th class="px-4 py-3 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">Monday</th>
+              <th class="px-4 py-3 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">Tuesday</th>
+              <th class="px-4 py-3 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">Wednesday</th>
+              <th class="px-4 py-3 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">Thursday</th>
+              <th class="px-4 py-3 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">Friday</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-200">
+            <tr>
+              <td class="px-4 py-3 whitespace-nowrap text-sm font-medium text-slate-600">8:00 AM</td>
+              <td class="px-4 py-3">
+                <div class="p-3 bg-gradient-to-br from-blue-50 to-blue-100 border-l-4 border-blue-500 rounded">
+                  <div class="font-semibold text-sm text-slate-900">Mathematics</div>
+                  <div class="text-xs text-slate-600 mt-1">Grade 10 - Section A</div>
+                  <div class="text-xs text-slate-500 mt-1">Room 101</div>
+                </div>
+              </td>
+              <td class="px-4 py-3 bg-slate-50"></td>
+              <td class="px-4 py-3">
+                <div class="p-3 bg-gradient-to-br from-blue-50 to-blue-100 border-l-4 border-blue-500 rounded">
+                  <div class="font-semibold text-sm text-slate-900">Mathematics</div>
+                  <div class="text-xs text-slate-600 mt-1">Grade 10 - Section A</div>
+                  <div class="text-xs text-slate-500 mt-1">Room 101</div>
+                </div>
+              </td>
+              <td class="px-4 py-3 bg-slate-50"></td>
+              <td class="px-4 py-3">
+                <div class="p-3 bg-gradient-to-br from-blue-50 to-blue-100 border-l-4 border-blue-500 rounded">
+                  <div class="font-semibold text-sm text-slate-900">Mathematics</div>
+                  <div class="text-xs text-slate-600 mt-1">Grade 10 - Section A</div>
+                  <div class="text-xs text-slate-500 mt-1">Room 101</div>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td class="px-4 py-3 whitespace-nowrap text-sm font-medium text-slate-600">9:00 AM</td>
+              <td class="px-4 py-3 bg-slate-50"></td>
+              <td class="px-4 py-3">
+                <div class="p-3 bg-gradient-to-br from-purple-50 to-purple-100 border-l-4 border-purple-500 rounded">
+                  <div class="font-semibold text-sm text-slate-900">Algebra</div>
+                  <div class="text-xs text-slate-600 mt-1">Grade 11 - Section A</div>
+                  <div class="text-xs text-slate-500 mt-1">Room 201</div>
+                </div>
+              </td>
+              <td class="px-4 py-3 bg-slate-50"></td>
+              <td class="px-4 py-3">
+                <div class="p-3 bg-gradient-to-br from-purple-50 to-purple-100 border-l-4 border-purple-500 rounded">
+                  <div class="font-semibold text-sm text-slate-900">Algebra</div>
+                  <div class="text-xs text-slate-600 mt-1">Grade 11 - Section A</div>
+                  <div class="text-xs text-slate-500 mt-1">Room 201</div>
+                </div>
+              </td>
+              <td class="px-4 py-3 bg-slate-50"></td>
+            </tr>
+            <tr>
+              <td class="px-4 py-3 whitespace-nowrap text-sm font-medium text-slate-600">10:00 AM</td>
+              <td class="px-4 py-3" colspan="5">
+                <div class="text-center py-2 text-sm font-medium text-slate-500 bg-yellow-50 rounded">Break Time</div>
+              </td>
+            </tr>
+            <tr>
+              <td class="px-4 py-3 whitespace-nowrap text-sm font-medium text-slate-600">10:30 AM</td>
+              <td class="px-4 py-3">
+                <div class="p-3 bg-gradient-to-br from-green-50 to-green-100 border-l-4 border-green-500 rounded">
+                  <div class="font-semibold text-sm text-slate-900">Calculus</div>
+                  <div class="text-xs text-slate-600 mt-1">Grade 12 - Section A</div>
+                  <div class="text-xs text-slate-500 mt-1">Room 301</div>
+                </div>
+              </td>
+              <td class="px-4 py-3 bg-slate-50"></td>
+              <td class="px-4 py-3">
+                <div class="p-3 bg-gradient-to-br from-green-50 to-green-100 border-l-4 border-green-500 rounded">
+                  <div class="font-semibold text-sm text-slate-900">Calculus</div>
+                  <div class="text-xs text-slate-600 mt-1">Grade 12 - Section A</div>
+                  <div class="text-xs text-slate-500 mt-1">Room 301</div>
+                </div>
+              </td>
+              <td class="px-4 py-3 bg-slate-50"></td>
+              <td class="px-4 py-3">
+                <div class="p-3 bg-gradient-to-br from-orange-50 to-orange-100 border-l-4 border-orange-500 rounded">
+                  <div class="font-semibold text-sm text-slate-900">Statistics</div>
+                  <div class="text-xs text-slate-600 mt-1">Grade 11 - Section B</div>
+                  <div class="text-xs text-slate-500 mt-1">Room 202</div>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td class="px-4 py-3 whitespace-nowrap text-sm font-medium text-slate-600">11:30 AM</td>
+              <td class="px-4 py-3 bg-slate-50"></td>
+              <td class="px-4 py-3">
+                <div class="p-3 bg-gradient-to-br from-blue-50 to-blue-100 border-l-4 border-blue-500 rounded">
+                  <div class="font-semibold text-sm text-slate-900">Mathematics</div>
+                  <div class="text-xs text-slate-600 mt-1">Grade 10 - Section B</div>
+                  <div class="text-xs text-slate-500 mt-1">Room 102</div>
+                </div>
+              </td>
+              <td class="px-4 py-3 bg-slate-50"></td>
+              <td class="px-4 py-3">
+                <div class="p-3 bg-gradient-to-br from-blue-50 to-blue-100 border-l-4 border-blue-500 rounded">
+                  <div class="font-semibold text-sm text-slate-900">Mathematics</div>
+                  <div class="text-xs text-slate-600 mt-1">Grade 10 - Section B</div>
+                  <div class="text-xs text-slate-500 mt-1">Room 102</div>
+                </div>
+              </td>
+              <td class="px-4 py-3 bg-slate-50"></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <!-- Legend -->
+      <div class="px-6 py-4 bg-slate-50 border-t border-slate-200">
+        <h3 class="text-sm font-semibold text-slate-700 mb-2">Color Legend:</h3>
+        <div class="flex flex-wrap gap-4">
+          <div class="flex items-center gap-2"><div class="w-4 h-4 bg-blue-500 rounded"></div><span class="text-xs text-slate-600">Grade 10</span></div>
+          <div class="flex items-center gap-2"><div class="w-4 h-4 bg-purple-500 rounded"></div><span class="text-xs text-slate-600">Grade 11</span></div>
+          <div class="flex items-center gap-2"><div class="w-4 h-4 bg-green-500 rounded"></div><span class="text-xs text-slate-600">Grade 12</span></div>
+          <div class="flex items-center gap-2"><div class="w-4 h-4 bg-orange-500 rounded"></div><span class="text-xs text-slate-600">Elective</span></div>
+        </div>
+      </div>
+    </div>
+    <!-- Lightweight interaction script: manage selection and assignment UI -->
+    <script>
+      (function() {
+        const instructors = document.querySelectorAll('.instructor-item');
+        const subjects = document.querySelectorAll('.subject-item');
+        const weeklyTitle = document.getElementById('weekly-title');
+        const weeklySub = document.getElementById('weekly-sub');
+        const assignBtn = document.getElementById('assign-btn');
+        const removeBtn = document.getElementById('remove-btn');
+        const addSlotBtn = document.getElementById('add-slot-btn');
+        const addInstructorBtn = document.getElementById('add-instructor-btn');
+        const instructorModal = document.getElementById('instructor-modal');
+  const instructorForm = document.getElementById('instructor-form');
+        const instructorModalClose = document.getElementById('instructor-modal-close');
+        const instructorCancel = document.getElementById('instructor-cancel');
+  const instructorBackdrop = document.getElementById('instructor-backdrop');
+  const viewButtons = document.querySelectorAll('.view-instructor-btn');
+  const removeButtons = document.querySelectorAll('.remove-instructor-btn');
+  const instructorViewModal = document.getElementById('instructor-view-modal');
+  const instructorViewClose = document.getElementById('instructor-view-close');
+  const instructorViewCancel = document.getElementById('instructor-view-cancel');
+  const instructorViewBackdrop = document.getElementById('instructor-view-backdrop');
+
+        let selectedInstructor = null;
+        let selectedSubject = null;
+
+        function updateHeader() {
+          if (selectedInstructor) {
+            weeklyTitle.textContent = selectedInstructor.name + ' — Weekly Schedule';
+            weeklySub.textContent = selectedInstructor.dept;
+          } else {
+            weeklyTitle.textContent = 'Select an Instructor';
+            weeklySub.textContent = 'No instructor selected';
+          }
+        }
+
+        function updateActionButtons() {
+          const enabled = !!(selectedInstructor && selectedSubject);
+          assignBtn.disabled = !enabled;
+          // Remove requires a selected slot; keep disabled for now until slot selection is implemented
+          removeBtn.disabled = true;
+          assignBtn.classList.toggle('opacity-50', !enabled);
+          removeBtn.classList.toggle('opacity-50', true);
+          assignBtn.classList.toggle('cursor-not-allowed', !enabled);
+          removeBtn.classList.toggle('cursor-not-allowed', true);
+          addSlotBtn.classList.toggle('opacity-50', !selectedInstructor);
+          addSlotBtn.classList.toggle('cursor-not-allowed', !selectedInstructor);
+          addSlotBtn.disabled = !selectedInstructor;
+        }
+
+        function openInstructorModal() {
+          instructorModal.classList.remove('hidden');
+          // focus first field
+          const nameField = document.getElementById('inst-name');
+          if (nameField) nameField.focus();
+        }
+
+        function closeInstructorModal() {
+          instructorModal.classList.add('hidden');
+          instructorForm.reset();
+        }
+
+        function clearSelections(type) {
+          const list = type === 'instructor' ? instructors : subjects;
+          list.forEach(el => el.classList.remove('ring-2', 'ring-blue-400', 'bg-blue-50', 'ring-indigo-400', 'bg-indigo-50'));
+        }
+
+        function openViewModal(instEl) {
+          const name = instEl.dataset.instructorName || '—';
+          const dept = instEl.dataset.instructorDept || '—';
+          const gmail = instEl.dataset.instructorEmail || '—';
+          const contact = instEl.dataset.instructorContact || '—';
+          const address = instEl.dataset.instructorAddress || '—';
+          document.getElementById('view-inst-name').textContent = name;
+          document.getElementById('view-inst-dept').textContent = dept || '—';
+          document.getElementById('view-inst-gmail').textContent = gmail || '—';
+          document.getElementById('view-inst-contact').textContent = contact || '—';
+          document.getElementById('view-inst-address').textContent = address || '—';
+          instructorViewModal.classList.remove('hidden');
+        }
+
+        instructors.forEach(btn => {
+          btn.addEventListener('click', () => {
+            selectedInstructor = {
+              id: btn.dataset.instructorId,
+              name: btn.dataset.instructorName,
+              dept: btn.dataset.instructorDept
+            };
+            clearSelections('instructor');
+            btn.classList.add('ring-2', 'ring-blue-400', 'bg-blue-50');
+            updateHeader();
+            updateActionButtons();
+          });
+        });
+
+        // View info buttons (stop row selection and open modal)
+        viewButtons.forEach(el => {
+          el.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const instEl = el.closest('.instructor-item');
+            if (instEl) openViewModal(instEl);
+          });
+        });
+
+        // Remove instructor buttons (confirm and remove from list)
+        removeButtons.forEach(el => {
+          el.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const instEl = el.closest('.instructor-item');
+            const li = el.closest('li');
+            if (!instEl || !li) return;
+            const name = instEl.dataset.instructorName || 'this instructor';
+            if (confirm(`Remove ${name}? This cannot be undone in demo mode.`)) {
+              // If currently selected, clear selection
+              if (selectedInstructor && selectedInstructor.id === instEl.dataset.instructorId) {
+                selectedInstructor = null;
+                updateHeader();
+                updateActionButtons();
+              }
+              li.remove();
+            }
+          });
+        });
+
+        subjects.forEach(btn => {
+          btn.addEventListener('click', () => {
+            selectedSubject = {
+              code: btn.dataset.subjectCode,
+              name: btn.dataset.subjectName,
+              tag: btn.dataset.subjectTag
+            };
+            clearSelections('subject');
+            btn.classList.add('ring-2', 'ring-indigo-400', 'bg-indigo-50');
+            updateActionButtons();
+          });
+        });
+
+        assignBtn.addEventListener('click', () => {
+          if (!(selectedInstructor && selectedSubject)) return;
+          // Placeholder: In a real flow, send to backend then refresh weekly grid
+          alert(`Assigned ${selectedSubject.code} — ${selectedSubject.name} to ${selectedInstructor.name}`);
+        });
+
+        addSlotBtn.addEventListener('click', () => {
+          if (!selectedInstructor) return;
+          alert(`Add Slot for ${selectedInstructor.name}: open modal (day/time/subject/room)`);
+        });
+
+        removeBtn.addEventListener('click', () => {
+          // Until slot selection is implemented, keep disabled
+          return;
+        });
+
+        // Add Instructor modal events
+        if (addInstructorBtn) {
+          addInstructorBtn.addEventListener('click', openInstructorModal);
+        }
+        instructorModalClose.addEventListener('click', closeInstructorModal);
+        instructorCancel.addEventListener('click', closeInstructorModal);
+        instructorForm.addEventListener('submit', (e) => {
+          e.preventDefault();
+          const name = (document.getElementById('inst-name')?.value || '').trim();
+          const gmail = (document.getElementById('inst-gmail')?.value || '').trim();
+          const contact = (document.getElementById('inst-contact')?.value || '').trim();
+          const address = (document.getElementById('inst-address')?.value || '').trim();
+          const notes = (document.getElementById('inst-notes')?.value || '').trim();
+          if (!name) {
+            alert('Please enter the instructor\'s full name.');
+            return;
+          }
+          if (!gmail) {
+            alert('Please enter a Gmail address.');
+            return;
+          }
+          // Placeholder: POST to backend to create instructor, then refresh list
+          alert(`Instructor created: ${name}\nGmail: ${gmail}${contact ? '\nContact: ' + contact : ''}${address ? '\nAddress: ' + address : ''}${notes ? '\nNotes: ' + notes : ''}`);
+          closeInstructorModal();
+        });
+
+        // Backdrop click closes modal
+        instructorBackdrop.addEventListener('click', closeInstructorModal);
+
+  // View modal close handlers
+  instructorViewClose.addEventListener('click', () => instructorViewModal.classList.add('hidden'));
+  instructorViewCancel.addEventListener('click', () => instructorViewModal.classList.add('hidden'));
+  instructorViewBackdrop.addEventListener('click', () => instructorViewModal.classList.add('hidden'));
+
+        // Close on ESC
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape' && !instructorModal.classList.contains('hidden')) {
+            closeInstructorModal();
+          }
+        });
+
+        updateHeader();
+        updateActionButtons();
+      })();
+    </script>
+  </div>
+{% endblock %}

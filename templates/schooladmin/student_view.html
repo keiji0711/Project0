@@ -1,0 +1,158 @@
+{% extends 'schooladmin/base_admin.html' %}
+{% set active_page = 'students' %}
+{% block page_title %}Student Profile{% endblock %}
+
+{% block admin_content %}
+<div class="space-y-6">
+  <!-- Top Stats -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div class="flex items-center gap-4 rounded-xl p-5 bg-green-500 text-white shadow">
+      <div class="w-10 h-10 rounded-lg bg-white/20 flex items-center justify-center">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+      </div>
+      <div>
+        <div class="text-2xl font-bold">05</div>
+        <div class="text-sm opacity-90">Upcoming Exam</div>
+      </div>
+    </div>
+    <div class="flex items-center gap-4 rounded-xl p-5 bg-rose-500 text-white shadow">
+      <div class="w-10 h-10 rounded-lg bg-white/20 flex items-center justify-center">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2v6h6v-6c0-1.105-1.343-2-3-2z"/></svg>
+      </div>
+      <div>
+        <div class="text-2xl font-bold">$1,500</div>
+        <div class="text-sm opacity-90">Due Fees</div>
+      </div>
+    </div>
+    <div class="flex items-center gap-4 rounded-xl p-5 bg-sky-500 text-white shadow">
+      <div class="w-10 h-10 rounded-lg bg-white/20 flex items-center justify-center">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0"/></svg>
+      </div>
+      <div>
+        <div class="text-2xl font-bold">10</div>
+        <div class="text-sm opacity-90">Events</div>
+      </div>
+    </div>
+    <div class="flex items-center gap-4 rounded-xl p-5 bg-amber-500 text-white shadow">
+      <div class="w-10 h-10 rounded-lg bg-white/20 flex items-center justify-center">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7h18M6 10h12M6 14h12M6 18h12"/></svg>
+      </div>
+      <div>
+        <div class="text-2xl font-bold">02</div>
+        <div class="text-sm opacity-90">Documents</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Middle: Info + Notice Board -->
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <!-- My Information -->
+    <div class="lg:col-span-2 bg-white rounded-xl border border-slate-200 shadow">
+      <div class="px-6 py-4 border-b border-slate-200 flex items-center justify-between">
+        <h2 class="font-semibold text-slate-900">My Information</h2>
+      </div>
+      <div class="p-6 grid grid-cols-1 sm:grid-cols-3 gap-6">
+        <!-- Avatar -->
+        <div class="sm:col-span-1 flex flex-col items-center">
+          <div class="w-40 h-40 rounded-xl bg-slate-100 flex items-center justify-center">
+            <svg class="w-24 h-24 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A13.937 13.937 0 0112 15c2.5 0 4.847.655 6.879 1.804M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+          </div>
+          <div class="mt-4 flex items-center gap-3">
+            <button class="p-2 rounded bg-slate-100 hover:bg-slate-200" title="Edit"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5h2m2 0h2m-8 4h8m-8 4h8m-8 4h8"/></svg></button>
+            <button class="p-2 rounded bg-slate-100 hover:bg-slate-200" title="Print"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 9V2h12v7M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/></svg></button>
+            <button class="p-2 rounded bg-slate-100 hover:bg-slate-200" title="Download"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 17v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5m0 0l5-5m-5 5V4"/></svg></button>
+          </div>
+        </div>
+        <!-- Details -->
+        <div class="sm:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-4 text-sm">
+          {% set info = [
+            ['Name', 'Richi Hassan'],
+            ['Gender', 'Female'],
+            ['Father Name', 'Kazi Fahimur Rahman'],
+            ['Mother Name', 'Richi Akon'],
+            ['Date Of Birth', '03/04/2010'],
+            ['Religion', 'Islam'],
+            ['Father Occupation', 'Businessman'],
+            ['E-mail', 'richihasan@gmail.com'],
+            ['Admission Date', '05/04/2016'],
+            ['Class', '2'],
+            ['Section', 'A'],
+            ['Roll', '2901'],
+            ['Address', 'Ta-107 Sydney, Australia'],
+            ['Phone', '+ 88 255600']
+          ] %}
+          {% for label, value in info %}
+          <div class="flex items-start gap-3">
+            <div class="w-36 text-slate-500">{{ label }} :</div>
+            <div class="font-medium text-slate-900">{{ value }}</div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+
+    <!-- Notice Board -->
+    <div class="bg-white rounded-xl border border-slate-200 shadow">
+      <div class="px-6 py-4 border-b border-slate-200 flex items-center justify-between">
+        <h2 class="font-semibold text-slate-900">Notice Board</h2>
+      </div>
+      <div class="p-6 space-y-4 max-h-[420px] overflow-y-auto">
+        {% set notices = [
+          ['16 May, 2017', 'Jennyfar Lopez', 'Great School management dummy text of the printing and typesetting industry.'],
+          ['16 May, 2017', 'Kazi Fahim', 'Great School management simply dummy text of the printing and typesetting industry.'],
+          ['16 May, 2017', 'Gizzar Awala', 'Great School management simply dummy text of the printing and typesetting industry.']
+        ] %}
+        {% for date, author, text in notices %}
+        <div class="border border-slate-200 rounded-lg p-3">
+          <div class="text-xs text-slate-500">{{ date }}</div>
+          <div class="text-sm font-semibold text-slate-900 mt-1">{{ author }} <span class="font-normal text-slate-500">• 5 min ago</span></div>
+          <p class="text-sm text-slate-700 mt-1">{{ text }}</p>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  <!-- All Exam Result -->
+  <div class="bg-white rounded-xl border border-slate-200 shadow">
+    <div class="px-6 py-4 border-b border-slate-200 flex items-center justify-between">
+      <h2 class="font-semibold text-slate-900">All Exam Result</h2>
+      <div class="flex items-center gap-3">
+        <input class="px-3 py-2 text-sm border border-slate-300 rounded-lg" placeholder="Search by Exam..." />
+        <input class="px-3 py-2 text-sm border border-slate-300 rounded-lg" placeholder="Search by Date..." />
+        <button class="px-4 py-2 text-sm font-semibold bg-blue-600 text-white rounded-lg">Search</button>
+      </div>
+    </div>
+    <div class="overflow-x-auto">
+      <table class="min-w-full text-sm">
+        <thead class="bg-slate-50">
+          <tr class="text-slate-600 uppercase text-xs">
+            <th class="px-4 py-3 text-left">Exam Name</th>
+            <th class="px-4 py-3 text-left">Subject</th>
+            <th class="px-4 py-3 text-left">Grade Point</th>
+            <th class="px-4 py-3 text-left">Percent From</th>
+            <th class="px-4 py-3 text-left">Percent Upto</th>
+            <th class="px-4 py-3 text-left">Date</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-200">
+          {% set results = [
+            ['Class Test', 'Mathematics', '4.00', '98.00', '100.00', '20/06/2017'],
+            ['Pre Test', 'English', '3.50', '70.00', '100.00', '20/06/2017'],
+            ['Class Test', 'Mathematics', '4.00', '98.00', '100.00', '20/06/2017'],
+            ['Class Test', 'Mathematics', '4.00', '98.00', '100.00', '20/06/2017'],
+            ['Class Test', 'Mathematics', '4.00', '98.00', '100.00', '20/06/2017']
+          ] %}
+          {% for e in results %}
+          <tr class="hover:bg-slate-50">
+            {% for col in e %}
+            <td class="px-4 py-3">{{ col }}</td>
+            {% endfor %}
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

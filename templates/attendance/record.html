@@ -1,0 +1,46 @@
+<!-- File: attendance/record.html
+     Purpose: Attendance recording view for a class. Extends `base.html` and shows class header and
+     a responsive table of students with Present/Absent/Late pill-styled visual-only buttons.
+-->
+{% extends 'base.html' %}
+{% block title %}Attendance — Record{% endblock %}
+
+{% block content %}
+  <header class="mb-6">
+    <h2 class="text-xl font-semibold" style="color:var(--color-secondary)">{{ class.subject if class is defined else 'Subject Name' }} — {{ class.section if class is defined else 'Section' }}</h2>
+    <p class="text-sm text-slate-600">Instructor: {{ class.instructor if class is defined else 'Instructor Name' }} · Date: {{ date if date is defined else 'YYYY-MM-DD' }}</p>
+  </header>
+
+  <div class="overflow-x-auto bg-white rounded-lg shadow-sm">
+    <table class="min-w-full divide-y divide-gray-200">
+      <thead class="bg-gray-50">
+        <tr>
+          <th class="px-4 py-3 text-left text-sm font-medium">#</th>
+          <th class="px-4 py-3 text-left text-sm font-medium">Student Name</th>
+          <th class="px-4 py-3 text-left text-sm font-medium">ID</th>
+          <th class="px-4 py-3 text-left text-sm font-medium">Status</th>
+        </tr>
+      </thead>
+      <tbody class="bg-white divide-y divide-gray-100">
+        {% for student in students if students is defined else range(1,8) %}
+        <tr>
+          <td class="px-4 py-3">{{ loop.index }}</td>
+          <td class="px-4 py-3">{{ student.name if students is defined else 'Student ' ~ loop.index }}</td>
+          <td class="px-4 py-3">{{ student.student_id if students is defined else 'ID' ~ loop.index }}</td>
+          <td class="px-4 py-3">
+            <div class="flex items-center gap-2">
+              <button type="button" class="px-3 py-1 rounded-full text-sm font-medium" style="background-color:rgba(37,99,235,0.08);color:var(--color-primary)">Present</button>
+              <button type="button" class="px-3 py-1 rounded-full text-sm font-medium" style="background-color:rgba(226,232,240,0.5);color:var(--color-text)">Absent</button>
+              <button type="button" class="px-3 py-1 rounded-full text-sm font-medium" style="background-color:rgba(250,204,21,0.12);color:var(--color-accent)">Late</button>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <div class="mt-6 flex justify-end">
+    <button type="button" class="inline-flex items-center px-4 py-2 rounded-md font-semibold text-white" style="background-color:var(--color-primary)">Submit Attendance</button>
+  </div>
+{% endblock %}

@@ -1,0 +1,50 @@
+<!-- File: login.html
+     Purpose: Login page template. Extends `base.html`. Contains centered login card with Email/Password
+     placeholders using Jinja variables and accessible form layout.
+-->
+{% extends 'base.html' %}
+{% block title %}Login — AttendGuard{% endblock %}
+
+{% block content %}
+  <div class="min-h-[60vh] flex items-center justify-center">
+    <div class="w-full max-w-md">
+      <div class="bg-white rounded-xl shadow-md p-6">
+        <h2 class="text-2xl font-semibold" style="color:var(--color-secondary)">Sign in to AttendGuard</h2>
+        <p class="mt-2 text-sm text-slate-600">Enter your credentials to access your dashboard.</p>
+
+        <form method="post" action="{{ url_for('auth.login') if url_for else '#' }}" class="mt-6 space-y-4" aria-label="Login form">
+          {{ form.hidden_tag() if form is defined else '' }}
+          <div>
+            <label for="email" class="block text-sm font-medium text-slate-700">Email</label>
+            <div class="mt-1">
+              <input id="email" name="email" type="email" autocomplete="email" required class="block w-full rounded-md border-gray-200 shadow-sm py-2 px-3 focus:ring-2 focus:ring-[color:var(--color-primary)] focus:ring-opacity-30" placeholder="you@example.com">
+            </div>
+          </div>
+
+          <div>
+            <label for="password" class="block text-sm font-medium text-slate-700">Password</label>
+            <div class="mt-1">
+              <input id="password" name="password" type="password" autocomplete="current-password" required class="block w-full rounded-md border-gray-200 shadow-sm py-2 px-3 focus:ring-2 focus:ring-[color:var(--color-primary)] focus:ring-opacity-30" placeholder="••••••••">
+            </div>
+          </div>
+
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <input id="remember" name="remember" type="checkbox" class="h-4 w-4 text-[color:var(--color-primary)]">
+              <label for="remember" class="text-sm text-slate-600">Remember me</label>
+            </div>
+            <div>
+              <a href="{{ url_for('auth.forgot_password') if url_for else '#' }}" class="text-sm text-[color:var(--color-primary)]">Forgot password?</a>
+            </div>
+          </div>
+
+          <div>
+            <button type="submit" class="w-full px-4 py-2 rounded-md text-white font-semibold" style="background-color:var(--color-primary)">Login</button>
+          </div>
+
+        </form>
+
+      </div>
+    </div>
+  </div>
+{% endblock %}
