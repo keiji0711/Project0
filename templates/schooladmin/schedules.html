@@ -150,6 +150,67 @@
       </div>
     </div>
 
+    <!-- Assign Subject Modal (Desktop style) -->
+    <div id="assign-modal" class="fixed inset-0 z-50 hidden">
+      <!-- Backdrop -->
+      <div id="assign-backdrop" class="absolute inset-0 bg-slate-900/40"></div>
+      <!-- Dialog -->
+      <div class="relative mx-auto w-full max-w-2xl mt-20 px-6">
+        <div class="bg-white rounded-xl shadow-2xl border border-slate-200 overflow-hidden">
+          <!-- Header -->
+          <div class="px-6 py-4 border-b border-slate-200 flex items-center justify-between">
+            <div>
+              <h3 class="text-base font-semibold text-slate-900">Assign Subject</h3>
+              <p class="text-xs text-slate-500">Choose instructor, subject, day, and time</p>
+            </div>
+            <button id="assign-close" type="button" class="p-2 text-slate-500 hover:text-slate-700">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+          </div>
+          <!-- Content -->
+          <form id="assign-form" class="px-6 py-5 max-h-[70vh] overflow-y-auto">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div class="sm:col-span-2">
+                <label for="assign-instructor" class="block text-xs font-medium text-slate-700">Instructor<span class="text-rose-500"> *</span></label>
+                <select id="assign-instructor" name="instructor" required class="mt-1 w-full px-3 py-2 text-sm rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"></select>
+              </div>
+              <div class="sm:col-span-2">
+                <label for="assign-subject" class="block text-xs font-medium text-slate-700">Subject<span class="text-rose-500"> *</span></label>
+                <select id="assign-subject" name="subject" required class="mt-1 w-full px-3 py-2 text-sm rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"></select>
+              </div>
+              <div>
+                <label for="assign-day" class="block text-xs font-medium text-slate-700">Day<span class="text-rose-500"> *</span></label>
+                <select id="assign-day" name="day" required class="mt-1 w-full px-3 py-2 text-sm rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                  <option value="Monday">Monday</option>
+                  <option value="Tuesday">Tuesday</option>
+                  <option value="Wednesday">Wednesday</option>
+                  <option value="Thursday">Thursday</option>
+                  <option value="Friday">Friday</option>
+                </select>
+              </div>
+              <div>
+                <label for="assign-start" class="block text-xs font-medium text-slate-700">Start Time<span class="text-rose-500"> *</span></label>
+                <input id="assign-start" name="start" type="time" required class="mt-1 w-full px-3 py-2 text-sm rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
+              </div>
+              <div>
+                <label for="assign-end" class="block text-xs font-medium text-slate-700">End Time<span class="text-rose-500"> *</span></label>
+                <input id="assign-end" name="end" type="time" required class="mt-1 w-full px-3 py-2 text-sm rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
+              </div>
+              <div>
+                <label for="assign-room" class="block text-xs font-medium text-slate-700">Room <span class="text-slate-400">(optional)</span></label>
+                <input id="assign-room" name="room" type="text" placeholder="e.g., Room 101" class="mt-1 w-full px-3 py-2 text-sm rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
+              </div>
+            </div>
+            <!-- Footer -->
+            <div class="mt-6 pt-4 border-t border-slate-200 flex items-center justify-end gap-3">
+              <button type="button" id="assign-cancel" class="px-3 py-2 text-xs rounded-lg border border-slate-300 text-slate-700 hover:bg-slate-50">Cancel</button>
+              <button type="submit" class="px-3 py-2 text-xs rounded-lg bg-indigo-600 text-white hover:bg-indigo-700">Assign</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
     <!-- Card 2: Subjects for Selected Instructor -->
   <div class="bg-white rounded-xl shadow-md border border-slate-200 flex flex-col lg:col-span-3">
       <div class="px-5 py-4 border-b border-slate-200 flex items-center justify-between">
@@ -362,6 +423,18 @@
   const instructorViewCancel = document.getElementById('instructor-view-cancel');
   const instructorViewBackdrop = document.getElementById('instructor-view-backdrop');
 
+  // Assign Subject modal refs
+  const assignModal = document.getElementById('assign-modal');
+  const assignBackdrop = document.getElementById('assign-backdrop');
+  const assignForm = document.getElementById('assign-form');
+  const assignClose = document.getElementById('assign-close');
+  const assignCancel = document.getElementById('assign-cancel');
+  const assignInstructorSelect = document.getElementById('assign-instructor');
+  const assignSubjectSelect = document.getElementById('assign-subject');
+  const assignDaySelect = document.getElementById('assign-day');
+  const assignStartInput = document.getElementById('assign-start');
+  const assignEndInput = document.getElementById('assign-end');
+
         let selectedInstructor = null;
         let selectedSubject = null;
 
@@ -476,10 +549,44 @@
           });
         });
 
+        function openAssignModal() {
+          // Populate instructors
+          assignInstructorSelect.innerHTML = '';
+          document.querySelectorAll('#instructor-list .instructor-item').forEach(el => {
+            const opt = document.createElement('option');
+            opt.value = el.dataset.instructorId || '';
+            opt.textContent = el.dataset.instructorName || '—';
+            if (selectedInstructor && selectedInstructor.id === opt.value) opt.selected = true;
+            assignInstructorSelect.appendChild(opt);
+          });
+          // Populate subjects
+          assignSubjectSelect.innerHTML = '';
+          document.querySelectorAll('#subject-list .subject-item').forEach(el => {
+            const code = el.dataset.subjectCode || '';
+            const name = el.dataset.subjectName || '';
+            const opt = document.createElement('option');
+            opt.value = code;
+            opt.textContent = code + ' — ' + name;
+            if (selectedSubject && selectedSubject.code === code) opt.selected = true;
+            assignSubjectSelect.appendChild(opt);
+          });
+
+          // Defaults for time and day
+          if (!assignDaySelect.value) assignDaySelect.value = 'Monday';
+          assignStartInput.value = assignStartInput.value || '08:00';
+          assignEndInput.value = assignEndInput.value || '09:00';
+
+          assignModal.classList.remove('hidden');
+        }
+
+        function closeAssignModal() {
+          assignModal.classList.add('hidden');
+          assignForm.reset();
+        }
+
         assignBtn.addEventListener('click', () => {
           if (!(selectedInstructor && selectedSubject)) return;
-          // Placeholder: In a real flow, send to backend then refresh weekly grid
-          alert(`Assigned ${selectedSubject.code} — ${selectedSubject.name} to ${selectedInstructor.name}`);
+          openAssignModal();
         });
 
         addSlotBtn.addEventListener('click', () => {
@@ -521,6 +628,34 @@
         // Backdrop click closes modal
         instructorBackdrop.addEventListener('click', closeInstructorModal);
 
+        // Assign modal handlers
+        assignClose.addEventListener('click', closeAssignModal);
+        assignCancel.addEventListener('click', closeAssignModal);
+        assignBackdrop.addEventListener('click', closeAssignModal);
+        assignForm.addEventListener('submit', (e) => {
+          e.preventDefault();
+          const instructorId = assignInstructorSelect.value;
+          const instructorName = assignInstructorSelect.options[assignInstructorSelect.selectedIndex]?.textContent || '';
+          const subjectCode = assignSubjectSelect.value;
+          const subjectName = assignSubjectSelect.options[assignSubjectSelect.selectedIndex]?.textContent?.split(' — ').slice(1).join(' — ') || '';
+          const day = assignDaySelect.value;
+          const start = assignStartInput.value;
+          const end = assignEndInput.value;
+          const room = document.getElementById('assign-room')?.value || '';
+
+          if (!instructorId || !subjectCode || !day || !start || !end) {
+            alert('Please complete all required fields.');
+            return;
+          }
+          if (start >= end) {
+            alert('End time must be later than start time.');
+            return;
+          }
+          // Placeholder: send to backend and refresh schedule grid
+          alert(`Assigned ${subjectCode} — ${subjectName} to ${instructorName} on ${day} ${start}–${end}${room ? ' @ ' + room : ''}`);
+          closeAssignModal();
+        });
+
   // View modal close handlers
   instructorViewClose.addEventListener('click', () => instructorViewModal.classList.add('hidden'));
   instructorViewCancel.addEventListener('click', () => instructorViewModal.classList.add('hidden'));
@@ -530,6 +665,9 @@
         document.addEventListener('keydown', (e) => {
           if (e.key === 'Escape' && !instructorModal.classList.contains('hidden')) {
             closeInstructorModal();
+          }
+          if (e.key === 'Escape' && !assignModal.classList.contains('hidden')) {
+            closeAssignModal();
           }
         });
 

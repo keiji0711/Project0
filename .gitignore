@@ -1,0 +1,48 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg
+*.egg-info/
+.eggs/
+.Python
+.python-version
+
+# Environments
+venv/
+.venv/
+ENV/
+.env
+.env.*
+
+# Build outputs
+build/
+dist/
+*.log
+coverage/
+htmlcov/
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+
+# Node/Tailwind
+node_modules/
+package-lock.json
+pnpm-lock.yaml
+yarn.lock
+.next/
+.turbo/
+.parcel-cache/
+
+# OS/editor
+.DS_Store
+.idea/
+.vscode/
+
+# Flask
+instance/
+
+# Frontend assets
+.cache/
