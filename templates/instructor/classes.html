@@ -1,0 +1,98 @@
+<!-- File: instructor/classes.html
+     Purpose: List all classes assigned to the instructor with details.
+-->
+{% extends 'instructor/base_instructor.html' %}
+{% block page_title %}My Classes{% endblock %}
+
+{% block instructor_content %}
+    <!-- Page Header -->
+    <div class="mb-8">
+      <h1 class="text-2xl font-bold text-slate-900">My Classes</h1>
+      <p class="text-slate-600 mt-1">All classes you're currently teaching this semester.</p>
+    </div>
+
+    <!-- Stats Summary -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+      <div class="bg-white rounded-lg p-4 shadow-md border border-slate-200">
+        <p class="text-sm text-slate-600">Total Classes</p>
+        <p class="text-2xl font-bold text-slate-900 mt-1">{{ classes|length if classes else 0 }}</p>
+      </div>
+      <div class="bg-white rounded-lg p-4 shadow-md border border-slate-200">
+        <p class="text-sm text-slate-600">Total Students</p>
+        <p class="text-2xl font-bold text-slate-900 mt-1">{{ total_students if total_students else 0 }}</p>
+      </div>
+      <div class="bg-white rounded-lg p-4 shadow-md border border-slate-200">
+        <p class="text-sm text-slate-600">Subjects</p>
+        <p class="text-2xl font-bold text-slate-900 mt-1">{{ subjects_count if subjects_count else 0 }}</p>
+      </div>
+      <div class="bg-white rounded-lg p-4 shadow-md border border-slate-200">
+        <p class="text-sm text-slate-600">Sections</p>
+        <p class="text-2xl font-bold text-slate-900 mt-1">{{ sections_count if sections_count else 0 }}</p>
+      </div>
+    </div>
+
+    <!-- Classes Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      {% if classes %}
+      {% for class in classes %}
+      <div class="bg-white rounded-xl p-6 shadow-md border border-slate-200 hover:shadow-lg transition-shadow">
+        <!-- Class Header -->
+        <div class="flex items-start justify-between mb-4">
+          <div class="flex-1">
+            <h3 class="text-lg font-bold text-slate-900">{{ class.subject }}</h3>
+            <p class="text-sm text-slate-600">{{ class.section }}</p>
+          </div>
+          <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-purple-100 text-purple-700">
+            {{ class.grade }}
+          </span>
+        </div>
+
+        <!-- Class Details -->
+        <div class="space-y-2 mb-4 text-sm">
+          <div class="flex items-center gap-2 text-slate-700">
+            <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+            <span>{{ class.students }} students</span>
+          </div>
+          <div class="flex items-center gap-2 text-slate-700">
+            <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            <span>{{ class.schedule }}</span>
+          </div>
+          <div class="flex items-center gap-2 text-slate-700">
+            <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+            <span>Room {{ class.room }}</span>
+          </div>
+        </div>
+
+        <!-- Attendance Stats -->
+        <div class="bg-slate-50 rounded-lg p-3 mb-4">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-xs font-medium text-slate-600">Attendance Rate</span>
+            <span class="text-xs font-bold text-slate-900">{{ class.attendance_rate }}%</span>
+          </div>
+          <div class="w-full bg-slate-200 rounded-full h-2">
+            <div class="bg-gradient-to-r from-green-500 to-green-600 h-2 rounded-full" style="width: {{ class.attendance_rate }}%"></div>
+          </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="flex gap-2">
+          <a href="{{ url_for('attendance.record') }}" class="flex-1 inline-flex items-center justify-center px-4 py-2 rounded-lg bg-purple-600 text-white text-sm font-medium hover:bg-purple-700 transition-colors">
+            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            Take Attendance
+          </a>
+          <button class="inline-flex items-center justify-center px-4 py-2 rounded-lg border border-slate-300 text-slate-700 text-sm font-medium hover:bg-slate-50 transition-colors">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+          </button>
+        </div>
+      </div>
+      {% endfor %}
+      {% else %}
+      <!-- No classes placeholder -->
+      <div class="col-span-2 bg-slate-50 rounded-xl p-12 text-center border border-slate-200">
+        <svg class="w-16 h-16 mx-auto text-slate-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+        <p class="text-slate-600 font-medium text-lg">No classes assigned yet</p>
+        <p class="text-sm text-slate-500 mt-2">Contact your administrator to assign classes.</p>
+      </div>
+      {% endif %}
+    </div>
+{% endblock %}

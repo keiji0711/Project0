@@ -1,0 +1,143 @@
+<!-- File: instructor/schedule.html
+     Purpose: Weekly calendar view of all instructor's classes.
+-->
+{% extends 'instructor/base_instructor.html' %}
+{% block page_title %}Schedule{% endblock %}
+
+{% block instructor_content %}
+    <!-- Page Header -->
+    <div class="mb-8">
+      <div class="flex items-center justify-between">
+        <div>
+          <h1 class="text-2xl font-bold text-slate-900">Weekly Schedule</h1>
+          <p class="text-slate-600 mt-1">Your complete teaching schedule for the week.</p>
+        </div>
+        <div class="flex items-center gap-2">
+          <button class="px-4 py-2 rounded-lg border border-slate-300 text-slate-700 font-medium hover:bg-slate-50 transition-colors">
+            <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+            Previous
+          </button>
+          <button class="px-4 py-2 rounded-lg border border-slate-300 text-slate-700 font-medium hover:bg-slate-50 transition-colors">
+            Next
+            <svg class="w-5 h-5 inline ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Week Display -->
+    <div class="bg-white rounded-xl shadow-md border border-slate-200 overflow-hidden mb-6">
+      <!-- Time slots header -->
+      <div class="grid grid-cols-6 gap-px bg-slate-200">
+        <div class="bg-slate-50 p-4 font-semibold text-slate-700 text-sm">Time</div>
+        <div class="bg-white p-4 text-center">
+          <div class="font-semibold text-slate-900">Monday</div>
+          <div class="text-xs text-slate-500">Dec 8</div>
+        </div>
+        <div class="bg-white p-4 text-center">
+          <div class="font-semibold text-slate-900">Tuesday</div>
+          <div class="text-xs text-slate-500">Dec 9</div>
+        </div>
+        <div class="bg-white p-4 text-center">
+          <div class="font-semibold text-slate-900">Wednesday</div>
+          <div class="text-xs text-slate-500">Dec 10</div>
+        </div>
+        <div class="bg-white p-4 text-center">
+          <div class="font-semibold text-slate-900">Thursday</div>
+          <div class="text-xs text-slate-500">Dec 11</div>
+        </div>
+        <div class="bg-white p-4 text-center">
+          <div class="font-semibold text-slate-900">Friday</div>
+          <div class="text-xs text-slate-500">Dec 12</div>
+        </div>
+      </div>
+
+      <!-- Schedule rows -->
+      {% set time_slots = [
+        '07:00 - 08:00', '08:00 - 09:00', '09:00 - 10:00', '10:00 - 11:00',
+        '11:00 - 12:00', '12:00 - 13:00', '13:00 - 14:00', '14:00 - 15:00',
+        '15:00 - 16:00', '16:00 - 17:00'
+      ] %}
+      
+      {% for time in time_slots %}
+      <div class="grid grid-cols-6 gap-px bg-slate-200 border-t border-slate-200">
+        <div class="bg-slate-50 p-3 text-xs font-medium text-slate-600">{{ time }}</div>
+        
+        <!-- Monday -->
+        <div class="bg-white p-2 min-h-[80px] relative">
+          {% if schedule and schedule.monday and schedule.monday[time] %}
+          <div class="bg-gradient-to-br from-purple-100 to-purple-50 border-l-4 border-purple-600 rounded p-2 h-full">
+            <div class="font-semibold text-xs text-slate-900">{{ schedule.monday[time].subject }}</div>
+            <div class="text-xs text-slate-600 mt-1">{{ schedule.monday[time].section }}</div>
+            <div class="text-xs text-slate-500 mt-1">Room {{ schedule.monday[time].room }}</div>
+          </div>
+          {% endif %}
+        </div>
+        
+        <!-- Tuesday -->
+        <div class="bg-white p-2 min-h-[80px] relative">
+          {% if schedule and schedule.tuesday and schedule.tuesday[time] %}
+          <div class="bg-gradient-to-br from-blue-100 to-blue-50 border-l-4 border-blue-600 rounded p-2 h-full">
+            <div class="font-semibold text-xs text-slate-900">{{ schedule.tuesday[time].subject }}</div>
+            <div class="text-xs text-slate-600 mt-1">{{ schedule.tuesday[time].section }}</div>
+            <div class="text-xs text-slate-500 mt-1">Room {{ schedule.tuesday[time].room }}</div>
+          </div>
+          {% endif %}
+        </div>
+        
+        <!-- Wednesday -->
+        <div class="bg-white p-2 min-h-[80px] relative">
+          {% if schedule and schedule.wednesday and schedule.wednesday[time] %}
+          <div class="bg-gradient-to-br from-green-100 to-green-50 border-l-4 border-green-600 rounded p-2 h-full">
+            <div class="font-semibold text-xs text-slate-900">{{ schedule.wednesday[time].subject }}</div>
+            <div class="text-xs text-slate-600 mt-1">{{ schedule.wednesday[time].section }}</div>
+            <div class="text-xs text-slate-500 mt-1">Room {{ schedule.wednesday[time].room }}</div>
+          </div>
+          {% endif %}
+        </div>
+        
+        <!-- Thursday -->
+        <div class="bg-white p-2 min-h-[80px] relative">
+          {% if schedule and schedule.thursday and schedule.thursday[time] %}
+          <div class="bg-gradient-to-br from-orange-100 to-orange-50 border-l-4 border-orange-600 rounded p-2 h-full">
+            <div class="font-semibold text-xs text-slate-900">{{ schedule.thursday[time].subject }}</div>
+            <div class="text-xs text-slate-600 mt-1">{{ schedule.thursday[time].section }}</div>
+            <div class="text-xs text-slate-500 mt-1">Room {{ schedule.thursday[time].room }}</div>
+          </div>
+          {% endif %}
+        </div>
+        
+        <!-- Friday -->
+        <div class="bg-white p-2 min-h-[80px] relative">
+          {% if schedule and schedule.friday and schedule.friday[time] %}
+          <div class="bg-gradient-to-br from-pink-100 to-pink-50 border-l-4 border-pink-600 rounded p-2 h-full">
+            <div class="font-semibold text-xs text-slate-900">{{ schedule.friday[time].subject }}</div>
+            <div class="text-xs text-slate-600 mt-1">{{ schedule.friday[time].section }}</div>
+            <div class="text-xs text-slate-500 mt-1">Room {{ schedule.friday[time].room }}</div>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+
+    <!-- Quick Stats -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div class="bg-white rounded-lg p-4 shadow-md border border-slate-200">
+        <p class="text-sm text-slate-600">Classes This Week</p>
+        <p class="text-2xl font-bold text-slate-900 mt-1">{{ weekly_total if weekly_total else 18 }}</p>
+      </div>
+      <div class="bg-white rounded-lg p-4 shadow-md border border-slate-200">
+        <p class="text-sm text-slate-600">Teaching Hours</p>
+        <p class="text-2xl font-bold text-slate-900 mt-1">{{ teaching_hours if teaching_hours else 24 }}</p>
+      </div>
+      <div class="bg-white rounded-lg p-4 shadow-md border border-slate-200">
+        <p class="text-sm text-slate-600">Different Sections</p>
+        <p class="text-2xl font-bold text-slate-900 mt-1">{{ sections if sections else 8 }}</p>
+      </div>
+      <div class="bg-white rounded-lg p-4 shadow-md border border-slate-200">
+        <p class="text-sm text-slate-600">Next Class</p>
+        <p class="text-lg font-bold text-purple-600 mt-1">{{ next_class if next_class else 'Tomorrow 8:00 AM' }}</p>
+      </div>
+    </div>
+{% endblock %}

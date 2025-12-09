@@ -1,0 +1,301 @@
+{% extends 'superadmin/base_super_admin.html' %}
+{% block page_title %}Settings{% endblock %}
+{% set active_page = 'settings' %}
+
+{% block admin_content %}
+  <!-- Header -->
+  <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3 mb-5">
+    <div>
+      <h2 class="text-xl font-semibold text-slate-900">System Settings</h2>
+      <p class="text-sm text-slate-500">Configure global preferences, security, notifications, billing, and integrations</p>
+    </div>
+    <div class="flex items-center gap-2">
+      <button id="btnSave" class="inline-flex items-center gap-2 px-3 py-2 rounded-md font-medium bg-blue-600 text-white hover:bg-blue-700">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+        Save Changes
+      </button>
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="bg-white border border-slate-200 rounded-xl">
+    <div class="px-3 pt-3">
+      <div class="flex flex-wrap gap-2">
+        <button class="tab px-3 py-2 text-sm rounded-md bg-blue-50 text-blue-700 font-semibold" data-tab="general">General</button>
+        <button class="tab px-3 py-2 text-sm rounded-md text-slate-700 hover:bg-slate-50" data-tab="security">Security</button>
+        <button class="tab px-3 py-2 text-sm rounded-md text-slate-700 hover:bg-slate-50" data-tab="notifications">Notifications</button>
+        <button class="tab px-3 py-2 text-sm rounded-md text-slate-700 hover:bg-slate-50" data-tab="billing">Billing</button>
+        <button class="tab px-3 py-2 text-sm rounded-md text-slate-700 hover:bg-slate-50" data-tab="integrations">Integrations</button>
+      </div>
+    </div>
+    <div class="border-t border-slate-200"></div>
+
+    <!-- Panels -->
+    <div class="p-4 space-y-6">
+      <!-- General -->
+      <section id="panel-general" class="panel">
+        <h3 class="text-sm font-semibold text-slate-900 mb-3">General</h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <label class="text-sm">
+            <span class="text-slate-700">Organization Name</span>
+            <input type="text" value="{{ settings.org_name|default('AttendGuard') }}" class="mt-1 w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
+          </label>
+          <label class="text-sm">
+            <span class="text-slate-700">Default Timezone</span>
+            <select class="mt-1 w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+              {% for tz in ['UTC','US/Eastern','US/Central','US/Mountain','US/Pacific','Asia/Manila'] %}
+              <option {% if settings.timezone==tz %}selected{% endif %}>{{ tz }}</option>
+              {% endfor %}
+            </select>
+          </label>
+          <label class="text-sm">
+            <span class="text-slate-700">Locale</span>
+            <select class="mt-1 w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+              {% for loc in ['en-US','en-GB','fil-PH'] %}
+              <option {% if settings.locale==loc %}selected{% endif %}>{{ loc }}</option>
+              {% endfor %}
+            </select>
+          </label>
+          <label class="text-sm">
+            <span class="text-slate-700">Date Format</span>
+            <select class="mt-1 w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+              {% for fmt in ['YYYY-MM-DD','MM/DD/YYYY','DD/MM/YYYY'] %}
+              <option {% if settings.date_format==fmt %}selected{% endif %}>{{ fmt }}</option>
+              {% endfor %}
+            </select>
+          </label>
+        </div>
+        <div class="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <label class="text-sm">
+            <span class="text-slate-700">Primary Color</span>
+            <input type="color" value="{{ settings.primary_color|default('#2563EB') }}" class="mt-1 w-full h-10 border border-slate-200 rounded-lg" />
+          </label>
+          <label class="text-sm sm:col-span-2">
+            <span class="text-slate-700">Logo (URL)</span>
+            <input type="url" value="{{ settings.logo_url|default('') }}" placeholder="https://..." class="mt-1 w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
+          </label>
+        </div>
+        <div class="mt-4">
+          <span class="text-sm text-slate-700">Theme</span>
+          <div class="mt-2 flex items-center gap-4">
+            <label class="inline-flex items-center gap-2 text-sm"><input type="radio" name="theme" {% if settings.theme=='light' %}checked{% endif %}/> Light</label>
+            <label class="inline-flex items-center gap-2 text-sm"><input type="radio" name="theme" {% if settings.theme=='dark' %}checked{% endif %}/> Dark</label>
+            <label class="inline-flex items-center gap-2 text-sm"><input type="radio" name="theme" {% if settings.theme=='system' %}checked{% endif %}/> System</label>
+          </div>
+        </div>
+      </section>
+
+      <!-- Security -->
+      <section id="panel-security" class="panel hidden">
+        <h3 class="text-sm font-semibold text-slate-900 mb-3">Security</h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div class="text-sm">
+            <span class="text-slate-700">Require 2FA</span>
+            <div class="mt-2 inline-flex items-center gap-3">
+              <button class="switch" role="switch" aria-checked="{{ 'true' if settings.require_2fa else 'false' }}">
+                <span class="track"></span>
+                <span class="thumb"></span>
+              </button>
+              <span class="text-slate-500">Stronger account protection</span>
+            </div>
+          </div>
+          <label class="text-sm">
+            <span class="text-slate-700">Password Policy</span>
+            <select class="mt-1 w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+              {% for p in ['Standard','Strong','Very Strong'] %}
+              <option {% if settings.password_policy==p %}selected{% endif %}>{{ p }}</option>
+              {% endfor %}
+            </select>
+          </label>
+          <label class="text-sm">
+            <span class="text-slate-700">Session Timeout (minutes)</span>
+            <input type="number" min="5" value="{{ settings.session_timeout|default(30) }}" class="mt-1 w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
+          </label>
+          <label class="text-sm sm:col-span-2">
+            <span class="text-slate-700">IP Allowlist (comma-separated)</span>
+            <textarea rows="3" class="mt-1 w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="192.168.1.1, 203.0.113.0/24">{{ settings.ip_allowlist|default('') }}</textarea>
+          </label>
+        </div>
+      </section>
+
+      <!-- Notifications -->
+      <section id="panel-notifications" class="panel hidden">
+        <h3 class="text-sm font-semibold text-slate-900 mb-3">Notifications</h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div class="text-sm">
+            <span class="text-slate-700">Email Notifications</span>
+            <div class="mt-2 inline-flex items-center gap-3">
+              <button class="switch" role="switch" aria-checked="{{ 'true' if settings.email_notifications else 'false' }}">
+                <span class="track"></span>
+                <span class="thumb"></span>
+              </button>
+              <span class="text-slate-500">Send system emails</span>
+            </div>
+          </div>
+          <div class="text-sm">
+            <span class="text-slate-700">Weekly Summary</span>
+            <div class="mt-2 inline-flex items-center gap-3">
+              <button class="switch" role="switch" aria-checked="{{ 'true' if settings.weekly_summary else 'false' }}">
+                <span class="track"></span>
+                <span class="thumb"></span>
+              </button>
+              <span class="text-slate-500">Insights every Monday</span>
+            </div>
+          </div>
+          <label class="text-sm">
+            <span class="text-slate-700">Error Alerts Severity</span>
+            <select class="mt-1 w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+              {% for s in ['All','High Only','Critical Only'] %}
+              <option {% if settings.alert_severity==s %}selected{% endif %}>{{ s }}</option>
+              {% endfor %}
+            </select>
+          </label>
+        </div>
+      </section>
+
+      <!-- Billing -->
+      <section id="panel-billing" class="panel hidden">
+        <h3 class="text-sm font-semibold text-slate-900 mb-3">Billing</h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <label class="text-sm">
+            <span class="text-slate-700">Billing Contact Email</span>
+            <input type="email" value="{{ settings.billing_email|default('billing@attendguard.io') }}" class="mt-1 w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
+          </label>
+          <label class="text-sm">
+            <span class="text-slate-700">Invoice Frequency</span>
+            <select class="mt-1 w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+              {% for f in ['Monthly','Quarterly','Yearly'] %}
+              <option {% if settings.invoice_frequency==f %}selected{% endif %}>{{ f }}</option>
+              {% endfor %}
+            </select>
+          </label>
+          <div class="text-sm">
+            <span class="text-slate-700">Auto-Renew Subscriptions</span>
+            <div class="mt-2 inline-flex items-center gap-3">
+              <button class="switch" role="switch" aria-checked="{{ 'true' if settings.auto_renew else 'false' }}">
+                <span class="track"></span>
+                <span class="thumb"></span>
+              </button>
+              <span class="text-slate-500">Renew active subscriptions automatically</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Integrations -->
+      <section id="panel-integrations" class="panel hidden">
+        <h3 class="text-sm font-semibold text-slate-900 mb-3">Integrations</h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <label class="text-sm sm:col-span-2">
+            <span class="text-slate-700">Webhook URL</span>
+            <input type="url" value="{{ settings.webhook_url|default('') }}" placeholder="https://example.com/webhook" class="mt-1 w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
+          </label>
+          <label class="text-sm sm:col-span-2">
+            <span class="text-slate-700">API Key</span>
+            <div class="mt-1 flex items-center gap-2">
+              <input id="apiKey" type="password" value="{{ settings.api_key|default('sk_live_************************') }}" class="flex-1 px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
+              <button id="btnReveal" type="button" class="px-3 py-2 rounded-lg border border-slate-200 text-slate-700 hover:bg-slate-50">Reveal</button>
+              <button id="btnCopy" type="button" class="px-3 py-2 rounded-lg border border-slate-200 text-slate-700 hover:bg-slate-50">Copy</button>
+              <button id="btnRotate" type="button" class="px-3 py-2 rounded-lg bg-rose-600 text-white hover:bg-rose-700">Rotate</button>
+            </div>
+          </label>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <!-- Saved toast -->
+  <div id="savedToast" class="fixed bottom-4 right-4 hidden">
+    <div class="bg-emerald-600 text-white px-3 py-2 rounded-lg shadow-lg text-sm">Settings saved</div>
+  </div>
+
+  <!-- Rotate confirm modal -->
+  <div id="rotateModal" class="fixed inset-0 z-50 hidden" aria-hidden="true">
+    <div class="absolute inset-0 bg-slate-900/40"></div>
+    <div class="relative mx-auto mt-20 w-full max-w-lg">
+      <div class="bg-white rounded-xl shadow-xl border border-slate-200">
+        <div class="flex items-center justify-between px-4 py-3 border-b border-slate-200">
+          <h3 class="text-sm font-semibold text-slate-900">Rotate API Key</h3>
+          <button id="rotateClose" class="inline-flex items-center justify-center w-8 h-8 rounded hover:bg-slate-100" title="Close">
+            <svg class="w-4 h-4 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+          </button>
+        </div>
+        <div class="px-4 py-4 text-sm text-slate-700">
+          Rotating the API key will invalidate the current key immediately. Make sure to update your integrations.
+        </div>
+        <div class="px-4 py-3 flex items-center justify-end gap-2">
+          <button id="rotateCancel" class="px-3 py-2 rounded-lg border border-slate-200 text-slate-700 hover:bg-slate-50">Cancel</button>
+          <button id="rotateConfirm" class="px-3 py-2 rounded-lg bg-rose-600 text-white hover:bg-rose-700">Rotate Key</button>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  (function(){
+    // Tabs
+    const tabs = document.querySelectorAll('.tab');
+    const panels = {
+      general: document.getElementById('panel-general'),
+      security: document.getElementById('panel-security'),
+      notifications: document.getElementById('panel-notifications'),
+      billing: document.getElementById('panel-billing'),
+      integrations: document.getElementById('panel-integrations')
+    };
+    function setActive(tab){
+      tabs.forEach(t=>{
+        const active = t.getAttribute('data-tab') === tab;
+        t.classList.toggle('bg-blue-50', active);
+        t.classList.toggle('text-blue-700', active);
+        t.classList.toggle('font-semibold', active);
+        t.classList.toggle('text-slate-700', !active);
+      });
+      Object.entries(panels).forEach(([k, el])=>{ if(el) el.classList.toggle('hidden', k!==tab); });
+    }
+    tabs.forEach(t=> t.addEventListener('click', ()=> setActive(t.getAttribute('data-tab'))));
+    setActive('general');
+
+    // Fake switches
+    document.querySelectorAll('.switch').forEach(sw=>{
+      const track = sw.querySelector('.track');
+      const thumb = sw.querySelector('.thumb');
+      // style
+      if(track){ track.style.cssText = 'display:inline-block;width:38px;height:22px;border-radius:9999px;background-color:#e5e7eb;position:relative;'; }
+      if(thumb){ thumb.style.cssText = 'position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:9999px;background-color:white;box-shadow:0 1px 2px rgba(0,0,0,0.08);transition:transform .15s ease, background-color .15s ease;'; }
+      function render(){
+        const on = sw.getAttribute('aria-checked') === 'true';
+        if(track){ track.style.backgroundColor = on ? '#d1fae5' : '#e5e7eb'; }
+        if(thumb){ thumb.style.transform = on ? 'translateX(16px)' : 'translateX(0)'; thumb.style.backgroundColor = on ? '#10b981' : '#ffffff'; }
+      }
+      render();
+      sw.addEventListener('click', ()=>{ sw.setAttribute('aria-checked', sw.getAttribute('aria-checked')==='true' ? 'false' : 'true'); render(); });
+    });
+
+    // Save button toast
+    const btnSave = document.getElementById('btnSave');
+    const toast = document.getElementById('savedToast');
+    function showToast(){ if(!toast) return; toast.classList.remove('hidden'); setTimeout(()=> toast.classList.add('hidden'), 2000); }
+    if(btnSave) btnSave.addEventListener('click', showToast);
+
+    // Integrations: reveal/copy/rotate
+    const apiKey = document.getElementById('apiKey');
+    const btnReveal = document.getElementById('btnReveal');
+    const btnCopy = document.getElementById('btnCopy');
+    const btnRotate = document.getElementById('btnRotate');
+    const rotModal = document.getElementById('rotateModal');
+    const rotClose = document.getElementById('rotateClose');
+    const rotCancel = document.getElementById('rotateCancel');
+    const rotConfirm = document.getElementById('rotateConfirm');
+    if(btnReveal && apiKey){ btnReveal.addEventListener('click', ()=> apiKey.type = apiKey.type==='password' ? 'text' : 'password'); }
+    if(btnCopy && apiKey){ btnCopy.addEventListener('click', async ()=> { try { await navigator.clipboard.writeText(apiKey.value); showToast(); } catch(_){} }); }
+    function openRot(){ if(rotModal) rotModal.classList.remove('hidden'); }
+    function closeRot(){ if(rotModal) rotModal.classList.add('hidden'); }
+    if(btnRotate) btnRotate.addEventListener('click', openRot);
+    [rotClose, rotCancel].forEach(b => { if(b) b.addEventListener('click', closeRot); });
+    if(rotConfirm){ rotConfirm.addEventListener('click', ()=> { closeRot(); showToast(); }); }
+    if(rotModal){ rotModal.addEventListener('click', (e)=>{ if(e.target===rotModal) closeRot(); }); }
+  })();
+</script>
+{% endblock %}

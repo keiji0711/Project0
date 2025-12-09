@@ -1,75 +1,142 @@
-<!-- File: superadmin/dashboard.html
-     Purpose: Superadmin dashboard. Extends `base.html`. Two-column layout with sidebar and main
-     content showing a schools management table. Visual-only toggle and Add School accent button.
--->
-{% extends 'base.html' %}
-{% block title %}Superadmin — Dashboard{% endblock %}
+{% extends 'superadmin/base_super_admin.html' %}
+{% block page_title %}Super Admin{% endblock %}
+{% set active_page = 'dashboard' %}
 
-{% block content %}
-  <div class="lg:flex lg:space-x-6">
-    <aside class="mb-6 lg:mb-0 lg:w-64 bg-[color:var(--color-secondary)] text-white rounded-lg p-4">
-      <h3 class="font-semibold text-lg">Super Admin</h3>
-      <nav class="mt-4 space-y-2" aria-label="Superadmin navigation">
-        <a href="#" class="block py-2 px-3 rounded-md bg-[color:var(--color-secondary)]/90">Schools</a>
-        <a href="#" class="block py-2 px-3 rounded-md hover:bg-white/10">Subscriptions</a>
-        <a href="#" class="block py-2 px-3 rounded-md hover:bg-white/10">Users</a>
-        <a href="#" class="block py-2 px-3 rounded-md hover:bg-white/10">Settings</a>
-      </nav>
-    </aside>
-
-    <div class="flex-1">
-      <div class="flex items-center justify-between mb-4">
-        <h2 class="text-xl font-semibold" style="color:var(--color-secondary)">Schools management</h2>
-        <div class="flex items-center gap-3">
-          <a href="#" class="inline-flex items-center px-3 py-2 rounded-md font-medium" style="background-color:var(--color-accent)">Add School</a>
+{% block admin_content %}
+  <!-- KPI Cards -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 mb-6">
+    <!-- Total Schools -->
+    <div class="bg-white border border-slate-200 rounded-xl shadow-sm p-4">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-sm text-slate-500">Total Schools</p>
+          <p class="mt-1 text-2xl font-bold text-slate-900"><span class="count" data-count="{{ total_schools|default(schools|length if schools is defined else 0) }}">0</span></p>
+          <p class="mt-1 text-xs text-emerald-600">▲ 4.2% vs last month</p>
+        </div>
+        <div class="shrink-0 inline-flex items-center justify-center w-10 h-10 rounded-lg bg-blue-50 text-blue-600">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7l9-4 9 4-9 4-9-4zm0 6l9 4 9-4"/></svg>
         </div>
       </div>
+    </div>
 
-      <div class="overflow-x-auto bg-white rounded-lg shadow-sm">
-        <table class="min-w-full divide-y divide-gray-200">
-          <thead class="bg-gray-50">
-            <tr>
-              <th scope="col" class="px-4 py-3 text-left text-sm font-medium">School Name</th>
-              <th scope="col" class="px-4 py-3 text-left text-sm font-medium">Status</th>
-              <th scope="col" class="px-4 py-3 text-left text-sm font-medium">Subscription</th>
-              <th scope="col" class="px-4 py-3 text-left text-sm font-medium">Actions</th>
-            </tr>
-          </thead>
-          <tbody class="bg-white divide-y divide-gray-100">
-            {% for school in schools if schools is defined else range(1,4) %}
-            <tr>
-              <td class="px-4 py-3 text-sm">{{ school.name if schools is defined else 'Sample School ' ~ loop.index }}</td>
-              <td class="px-4 py-3 text-sm">
-                <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">Active</span>
-              </td>
-              <td class="px-4 py-3 text-sm">
-                <div class="flex items-center gap-3">
-                  <span>Paid</span>
-                  <!-- Visual-only toggle style -->
-                  <div class="ml-3 inline-flex items-center rounded-full p-1 bg-gray-200" role="switch" aria-checked="true" tabindex="0">
-                    <div class="h-4 w-4 rounded-full bg-white shadow-sm" style="transform:translateX(0)"></div>
-                  </div>
-                </div>
-              </td>
-              <td class="px-4 py-3 text-sm">
-                <a href="#" class="text-[color:var(--color-primary)]">View</a>
-                <span class="mx-2 text-slate-300">|</span>
-                <a href="#" class="text-slate-600">Edit</a>
-              </td>
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
+    <!-- Total Users -->
+    <div class="bg-white border border-slate-200 rounded-xl shadow-sm p-4">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-sm text-slate-500">Total Users</p>
+          <p class="mt-1 text-2xl font-bold text-slate-900"><span class="count" data-count="{{ total_users|default(0) }}">0</span></p>
+          <p class="mt-1 text-xs text-emerald-600">▲ 1.8% vs last month</p>
+        </div>
+        <div class="shrink-0 inline-flex items-center justify-center w-10 h-10 rounded-lg bg-violet-50 text-violet-600">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+        </div>
       </div>
+    </div>
 
-      <div class="mt-4 flex items-center justify-end">
-        <nav class="inline-flex -space-x-px rounded-md" aria-label="Pagination">
-          <a href="#" class="px-3 py-2 rounded-l-md border border-gray-200 bg-white text-sm">Previous</a>
-          <a href="#" class="px-3 py-2 border-t border-b border-gray-200 bg-white text-sm">1</a>
-          <a href="#" class="px-3 py-2 border border-gray-200 bg-white text-sm">2</a>
-          <a href="#" class="px-3 py-2 rounded-r-md border border-gray-200 bg-white text-sm">Next</a>
-        </nav>
+    <!-- Active Subscriptions -->
+    <div class="bg-white border border-slate-200 rounded-xl shadow-sm p-4">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-sm text-slate-500">Active Subscriptions</p>
+          <p class="mt-1 text-2xl font-bold text-slate-900"><span class="count" data-count="{{ active_subscriptions|default(0) }}">0</span></p>
+          <p class="mt-1 text-xs text-emerald-600">▲ 3.1% vs last month</p>
+        </div>
+        <div class="shrink-0 inline-flex items-center justify-center w-10 h-10 rounded-lg bg-emerald-50 text-emerald-600">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-10v10m8-10v10m-16-10v10"/></svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- Active Schools -->
+    <div class="bg-white border border-slate-200 rounded-xl shadow-sm p-4">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-sm text-slate-500">Active Schools</p>
+          <p class="mt-1 text-2xl font-bold text-slate-900"><span class="count" data-count="{{ active_schools|default(schools|length if schools is defined else 0) }}">0</span></p>
+          <p class="mt-1 text-xs text-emerald-600">▲ 2.4% vs last month</p>
+        </div>
+        <div class="shrink-0 inline-flex items-center justify-center w-10 h-10 rounded-lg bg-amber-50 text-amber-600">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+        </div>
       </div>
     </div>
   </div>
+
+  <div class="flex items-center justify-between mb-4">
+    <h2 class="text-xl font-semibold text-slate-900">Schools management</h2>
+    <div class="flex items-center gap-3">
+      <a href="#" class="inline-flex items-center px-3 py-2 rounded-md font-medium bg-blue-600 text-white hover:bg-blue-700">Add School</a>
+    </div>
+  </div>
+
+  <div class="overflow-x-auto bg-white rounded-lg shadow-sm">
+    <table class="min-w-full divide-y divide-gray-200">
+      <thead class="bg-gray-50">
+        <tr>
+          <th scope="col" class="px-4 py-3 text-left text-sm font-medium">School Name</th>
+          <th scope="col" class="px-4 py-3 text-left text-sm font-medium">Status</th>
+          <th scope="col" class="px-4 py-3 text-left text-sm font-medium">Subscription</th>
+          <th scope="col" class="px-4 py-3 text-left text-sm font-medium">Actions</th>
+        </tr>
+      </thead>
+      <tbody class="bg-white divide-y divide-gray-100">
+        {% set school_list = schools if schools is defined else [
+          {'name': 'Sample School 1'},
+          {'name': 'Sample School 2'},
+          {'name': 'Sample School 3'}
+        ] %}
+        {% for school in school_list %}
+        <tr>
+          <td class="px-4 py-3 text-sm">{{ school.name }}</td>
+          <td class="px-4 py-3 text-sm">
+            <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">Active</span>
+          </td>
+          <td class="px-4 py-3 text-sm">
+            <div class="flex items-center gap-3">
+              <span>Paid</span>
+              <div class="ml-3 inline-flex items-center rounded-full p-1 bg-gray-200" role="switch" aria-checked="true" tabindex="0">
+                <div class="h-4 w-4 rounded-full bg-white shadow-sm" style="transform:translateX(0)"></div>
+              </div>
+            </div>
+          </td>
+          <td class="px-4 py-3 text-sm">
+            <a href="#" class="text-blue-600 hover:text-blue-700">View</a>
+            <span class="mx-2 text-slate-300">|</span>
+            <a href="#" class="text-slate-600 hover:text-slate-900">Edit</a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <div class="mt-4 flex items-center justify-end">
+    <nav class="inline-flex -space-x-px rounded-md" aria-label="Pagination">
+      <a href="#" class="px-3 py-2 rounded-l-md border border-gray-200 bg-white text-sm">Previous</a>
+      <a href="#" class="px-3 py-2 border-t border-b border-gray-200 bg-white text-sm">1</a>
+      <a href="#" class="px-3 py-2 border border-gray-200 bg-white text-sm">2</a>
+      <a href="#" class="px-3 py-2 rounded-r-md border border-gray-200 bg-white text-sm">Next</a>
+    </nav>
+  </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  (function(){
+    const easeOutCubic = t => 1 - Math.pow(1 - t, 3);
+    function animateCount(el){
+      const target = Number(el.getAttribute('data-count')) || 0;
+      const duration = 900; // ms
+      const start = performance.now();
+      function frame(now){
+        const p = Math.min(1, (now - start) / duration);
+        const v = Math.floor(easeOutCubic(p) * target);
+        el.textContent = v.toLocaleString();
+        if(p < 1) requestAnimationFrame(frame); else el.textContent = target.toLocaleString();
+      }
+      requestAnimationFrame(frame);
+    }
+    document.querySelectorAll('.count').forEach(animateCount);
+  })();
+</script>
 {% endblock %}

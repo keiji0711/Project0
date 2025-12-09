@@ -1,46 +1,394 @@
 <!-- File: attendance/record.html
-     Purpose: Attendance recording view for a class. Extends `base.html` and shows class header and
-     a responsive table of students with Present/Absent/Late pill-styled visual-only buttons.
+     Purpose: Attendance recording view for instructors with modern UI and interactive controls.
 -->
-{% extends 'base.html' %}
-{% block title %}Attendance — Record{% endblock %}
+{% extends 'instructor/base_instructor.html' %}
+{% block page_title %}Take Attendance{% endblock %}
 
-{% block content %}
-  <header class="mb-6">
-    <h2 class="text-xl font-semibold" style="color:var(--color-secondary)">{{ class.subject if class is defined else 'Subject Name' }} — {{ class.section if class is defined else 'Section' }}</h2>
-    <p class="text-sm text-slate-600">Instructor: {{ class.instructor if class is defined else 'Instructor Name' }} · Date: {{ date if date is defined else 'YYYY-MM-DD' }}</p>
-  </header>
-
-  <div class="overflow-x-auto bg-white rounded-lg shadow-sm">
-    <table class="min-w-full divide-y divide-gray-200">
-      <thead class="bg-gray-50">
-        <tr>
-          <th class="px-4 py-3 text-left text-sm font-medium">#</th>
-          <th class="px-4 py-3 text-left text-sm font-medium">Student Name</th>
-          <th class="px-4 py-3 text-left text-sm font-medium">ID</th>
-          <th class="px-4 py-3 text-left text-sm font-medium">Status</th>
-        </tr>
-      </thead>
-      <tbody class="bg-white divide-y divide-gray-100">
-        {% for student in students if students is defined else range(1,8) %}
-        <tr>
-          <td class="px-4 py-3">{{ loop.index }}</td>
-          <td class="px-4 py-3">{{ student.name if students is defined else 'Student ' ~ loop.index }}</td>
-          <td class="px-4 py-3">{{ student.student_id if students is defined else 'ID' ~ loop.index }}</td>
-          <td class="px-4 py-3">
-            <div class="flex items-center gap-2">
-              <button type="button" class="px-3 py-1 rounded-full text-sm font-medium" style="background-color:rgba(37,99,235,0.08);color:var(--color-primary)">Present</button>
-              <button type="button" class="px-3 py-1 rounded-full text-sm font-medium" style="background-color:rgba(226,232,240,0.5);color:var(--color-text)">Absent</button>
-              <button type="button" class="px-3 py-1 rounded-full text-sm font-medium" style="background-color:rgba(250,204,21,0.12);color:var(--color-accent)">Late</button>
-            </div>
-          </td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
+{% block instructor_content %}
+  <!-- Page Header -->
+  <div class="mb-8">
+    <div class="flex items-center justify-between">
+      <div>
+        <h1 class="text-2xl font-bold text-slate-900">Take Attendance</h1>
+        <p class="text-slate-600 mt-1">{{ class.subject if class is defined else 'Subject Name' }} — {{ class.section if class is defined else 'Section' }}</p>
+      </div>
+      <div class="flex items-center gap-3">
+        <div class="text-right">
+          <div class="text-sm text-slate-600">Instructor</div>
+          <div class="font-semibold text-slate-900">{{ class.instructor if class is defined else 'Instructor Name' }}</div>
+        </div>
+        <div class="text-right">
+          <div class="text-sm text-slate-600">Date</div>
+          <div class="font-semibold text-slate-900">{{ date if date is defined else 'YYYY-MM-DD' }}</div>
+        </div>
+      </div>
+    </div>
   </div>
 
-  <div class="mt-6 flex justify-end">
-    <button type="button" class="inline-flex items-center px-4 py-2 rounded-md font-semibold text-white" style="background-color:var(--color-primary)">Submit Attendance</button>
+  <!-- Quick Stats & Actions -->
+  <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+    <div class="bg-white rounded-lg p-4 shadow-md border border-slate-200">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-sm text-slate-600">Total Students</p>
+          <p id="totalCount" class="text-2xl font-bold text-slate-900 mt-1">{{ students|length if students else 0 }}</p>
+        </div>
+        <div class="h-10 w-10 rounded-lg bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center">
+          <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+        </div>
+      </div>
+    </div>
+    <div class="bg-white rounded-lg p-4 shadow-md border border-slate-200">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-sm text-slate-600">Present</p>
+          <p id="presentCount" class="text-2xl font-bold text-green-600 mt-1">0</p>
+        </div>
+        <div class="h-10 w-10 rounded-lg bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center">
+          <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        </div>
+      </div>
+    </div>
+    <div class="bg-white rounded-lg p-4 shadow-md border border-slate-200">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-sm text-slate-600">Absent</p>
+          <p id="absentCount" class="text-2xl font-bold text-red-600 mt-1">0</p>
+        </div>
+        <div class="h-10 w-10 rounded-lg bg-gradient-to-br from-red-500 to-red-600 flex items-center justify-center">
+          <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </div>
+      </div>
+    </div>
+    <div class="bg-white rounded-lg p-4 shadow-md border border-slate-200">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-sm text-slate-600">Late</p>
+          <p id="lateCount" class="text-2xl font-bold text-orange-600 mt-1">0</p>
+        </div>
+        <div class="h-10 w-10 rounded-lg bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center">
+          <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        </div>
+      </div>
+    </div>
   </div>
+
+  <!-- Quick Actions Bar -->
+  <div class="bg-white rounded-lg p-4 shadow-md border border-slate-200 mb-6">
+    <div class="flex items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <button type="button" onclick="markAllStatus('present')" class="px-4 py-2 bg-green-600 text-white rounded-lg text-sm font-medium hover:bg-green-700 transition-colors">
+          Mark All Present
+        </button>
+        <button type="button" onclick="markAllStatus('absent')" class="px-4 py-2 bg-red-600 text-white rounded-lg text-sm font-medium hover:bg-red-700 transition-colors">
+          Mark All Absent
+        </button>
+        <button type="button" onclick="resetAll()" class="px-4 py-2 border border-slate-300 text-slate-700 rounded-lg text-sm font-medium hover:bg-slate-50 transition-colors">
+          Reset All
+        </button>
+      </div>
+      <div class="flex items-center gap-2">
+        <input type="text" id="searchStudent" placeholder="Search student..." class="px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-purple-500 focus:border-purple-500" onkeyup="filterStudents()">
+      </div>
+    </div>
+  </div>
+
+  <!-- Attendance Table -->
+  <div class="bg-white rounded-xl shadow-md border border-slate-200 overflow-hidden mb-6">
+    <div class="overflow-x-auto">
+      <table class="w-full">
+        <thead class="bg-slate-50 border-b border-slate-200">
+          <tr>
+            <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider w-16">#</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Student Name</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Student ID</th>
+            <th class="px-6 py-3 text-center text-xs font-medium text-slate-500 uppercase tracking-wider">Status</th>
+            <th class="px-6 py-3 text-center text-xs font-medium text-slate-500 uppercase tracking-wider">Message</th>
+          </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-slate-200" id="studentTableBody">
+          {% if students %}
+          {% for student in students %}
+          <tr class="hover:bg-slate-50 student-row" data-student-name="{{ student.name|lower }}" data-student-id="{{ student.student_id|lower }}">
+            <td class="px-6 py-4 text-sm text-slate-900">{{ loop.index }}</td>
+            <td class="px-6 py-4 text-sm font-medium text-slate-900">{{ student.name }}</td>
+            <td class="px-6 py-4 text-sm text-slate-600">{{ student.student_id }}</td>
+            <td class="px-6 py-4">
+              <div class="flex items-center justify-center gap-2">
+                <button type="button" onclick="setStatus(this, 'present')" class="status-btn px-4 py-2 rounded-lg text-sm font-medium border-2 border-slate-200 text-slate-600 hover:border-green-500 hover:bg-green-50 hover:text-green-700 transition-all">
+                  <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                  Present
+                </button>
+                <button type="button" onclick="setStatus(this, 'absent')" class="status-btn px-4 py-2 rounded-lg text-sm font-medium border-2 border-slate-200 text-slate-600 hover:border-red-500 hover:bg-red-50 hover:text-red-700 transition-all">
+                  <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                  Absent
+                </button>
+                <button type="button" onclick="setStatus(this, 'late')" class="status-btn px-4 py-2 rounded-lg text-sm font-medium border-2 border-slate-200 text-slate-600 hover:border-orange-500 hover:bg-orange-50 hover:text-orange-700 transition-all">
+                  <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                  Late
+                </button>
+              </div>
+            </td>
+            <td class="px-6 py-4 text-center">
+              <button type="button" onclick="openMessageModal(this, '{{ student.name }}', '{{ student.student_id }}')" class="inline-flex items-center px-3 py-1.5 rounded-lg border border-purple-300 text-purple-600 hover:bg-purple-50 transition-colors text-sm font-medium">
+                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/></svg>
+                Send Message
+              </button>
+            </td>
+          </tr>
+          {% endfor %}
+          {% else %}
+          <tr>
+            <td colspan="5" class="px-6 py-12 text-center">
+              <svg class="w-12 h-12 mx-auto text-slate-400 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+              <p class="text-slate-600 font-medium">No students in this class</p>
+              <p class="text-sm text-slate-500 mt-1">Add students to start taking attendance.</p>
+            </td>
+          </tr>
+          {% endif %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Form Actions -->
+  <div class="flex items-center justify-between bg-white rounded-lg p-4 shadow-md border border-slate-200">
+    <a href="{{ url_for('instructor.attendance') }}" class="px-4 py-2 border border-slate-300 text-slate-700 rounded-lg text-sm font-medium hover:bg-slate-50 transition-colors">
+      Cancel
+    </a>
+    <div class="flex items-center gap-3">
+      <button type="button" onclick="saveDraft()" class="px-4 py-2 border border-slate-300 text-slate-700 rounded-lg text-sm font-medium hover:bg-slate-50 transition-colors">
+        Save as Draft
+      </button>
+      <button type="button" onclick="submitAttendance()" class="px-6 py-2 bg-purple-600 text-white rounded-lg text-sm font-medium hover:bg-purple-700 transition-colors">
+        Submit Attendance
+      </button>
+    </div>
+  </div>
+
+  <!-- Message Modal -->
+  <div id="messageModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+    <div class="bg-white rounded-xl shadow-2xl max-w-lg w-full mx-4">
+      <!-- Modal Header -->
+      <div class="px-6 py-4 border-b border-slate-200 flex items-center justify-between">
+        <div>
+          <h3 class="text-lg font-bold text-slate-900">Send Message</h3>
+          <p id="modalStudentInfo" class="text-sm text-slate-600 mt-1"></p>
+        </div>
+        <button onclick="closeMessageModal()" class="text-slate-400 hover:text-slate-600">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+      
+      <!-- Modal Body -->
+      <div class="px-6 py-4">
+        <label class="block text-sm font-medium text-slate-700 mb-2">Message</label>
+        <textarea id="messageText" rows="5" class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 text-sm" placeholder="Type your message here..."></textarea>
+        
+        <!-- Quick Message Templates -->
+        <div class="mt-4">
+          <p class="text-xs font-medium text-slate-600 mb-2">Quick Templates:</p>
+          <div class="flex flex-wrap gap-2">
+            <button type="button" onclick="setMessageTemplate('Please see me after class.')" class="px-3 py-1 bg-slate-100 text-slate-700 rounded text-xs hover:bg-slate-200 transition-colors">See me after class</button>
+            <button type="button" onclick="setMessageTemplate('Great work today!')" class="px-3 py-1 bg-slate-100 text-slate-700 rounded text-xs hover:bg-slate-200 transition-colors">Great work!</button>
+            <button type="button" onclick="setMessageTemplate('Please submit missing homework.')" class="px-3 py-1 bg-slate-100 text-slate-700 rounded text-xs hover:bg-slate-200 transition-colors">Missing homework</button>
+            <button type="button" onclick="setMessageTemplate('Bring your textbook next class.')" class="px-3 py-1 bg-slate-100 text-slate-700 rounded text-xs hover:bg-slate-200 transition-colors">Bring textbook</button>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Modal Footer -->
+      <div class="px-6 py-4 border-t border-slate-200 flex items-center justify-end gap-3">
+        <button type="button" onclick="closeMessageModal()" class="px-4 py-2 border border-slate-300 text-slate-700 rounded-lg text-sm font-medium hover:bg-slate-50 transition-colors">
+          Cancel
+        </button>
+        <button type="button" onclick="sendMessage()" class="px-4 py-2 bg-purple-600 text-white rounded-lg text-sm font-medium hover:bg-purple-700 transition-colors">
+          <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
+          Send Message
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- JavaScript for Interactive Attendance -->
+  <script>
+    function setStatus(btn, status) {
+      // Get all status buttons in the same row
+      const row = btn.closest('tr');
+      const buttons = row.querySelectorAll('.status-btn');
+      
+      // Reset all buttons in the row
+      buttons.forEach(b => {
+        b.classList.remove('border-green-500', 'bg-green-100', 'text-green-700', 'font-semibold');
+        b.classList.remove('border-red-500', 'bg-red-100', 'text-red-700', 'font-semibold');
+        b.classList.remove('border-orange-500', 'bg-orange-100', 'text-orange-700', 'font-semibold');
+        b.classList.add('border-slate-200', 'text-slate-600');
+      });
+      
+      // Highlight selected status
+      btn.classList.remove('border-slate-200', 'text-slate-600');
+      if (status === 'present') {
+        btn.classList.add('border-green-500', 'bg-green-100', 'text-green-700', 'font-semibold');
+      } else if (status === 'absent') {
+        btn.classList.add('border-red-500', 'bg-red-100', 'text-red-700', 'font-semibold');
+      } else if (status === 'late') {
+        btn.classList.add('border-orange-500', 'bg-orange-100', 'text-orange-700', 'font-semibold');
+      }
+      
+      // Store status in data attribute
+      row.setAttribute('data-status', status);
+      
+      updateCounts();
+    }
+    
+    function markAllStatus(status) {
+      const rows = document.querySelectorAll('.student-row');
+      rows.forEach(row => {
+        if (row.style.display !== 'none') {
+          const buttons = row.querySelectorAll('.status-btn');
+          const targetBtn = status === 'present' ? buttons[0] : (status === 'absent' ? buttons[1] : buttons[2]);
+          setStatus(targetBtn, status);
+        }
+      });
+    }
+    
+    function resetAll() {
+      const rows = document.querySelectorAll('.student-row');
+      rows.forEach(row => {
+        const buttons = row.querySelectorAll('.status-btn');
+        buttons.forEach(b => {
+          b.classList.remove('border-green-500', 'bg-green-100', 'text-green-700', 'font-semibold');
+          b.classList.remove('border-red-500', 'bg-red-100', 'text-red-700', 'font-semibold');
+          b.classList.remove('border-orange-500', 'bg-orange-100', 'text-orange-700', 'font-semibold');
+          b.classList.add('border-slate-200', 'text-slate-600');
+        });
+        row.removeAttribute('data-status');
+      });
+      updateCounts();
+    }
+    
+    function updateCounts() {
+      const rows = document.querySelectorAll('.student-row');
+      let present = 0, absent = 0, late = 0;
+      
+      rows.forEach(row => {
+        const status = row.getAttribute('data-status');
+        if (status === 'present') present++;
+        else if (status === 'absent') absent++;
+        else if (status === 'late') late++;
+      });
+      
+      document.getElementById('presentCount').textContent = present;
+      document.getElementById('absentCount').textContent = absent;
+      document.getElementById('lateCount').textContent = late;
+    }
+    
+    function filterStudents() {
+      const searchTerm = document.getElementById('searchStudent').value.toLowerCase();
+      const rows = document.querySelectorAll('.student-row');
+      
+      rows.forEach(row => {
+        const name = row.getAttribute('data-student-name');
+        const id = row.getAttribute('data-student-id');
+        
+        if (name.includes(searchTerm) || id.includes(searchTerm)) {
+          row.style.display = '';
+        } else {
+          row.style.display = 'none';
+        }
+      });
+    }
+    
+    function submitAttendance() {
+      const rows = document.querySelectorAll('.student-row');
+      const attendanceData = [];
+      let unmarked = 0;
+      
+      rows.forEach(row => {
+        const status = row.getAttribute('data-status');
+        if (!status) {
+          unmarked++;
+        } else {
+          const name = row.querySelector('td:nth-child(2)').textContent;
+          const id = row.querySelector('td:nth-child(3)').textContent;
+          const note = row.querySelector('input[type="text"]').value;
+          attendanceData.push({ name, id, status, note });
+        }
+      });
+      
+      if (unmarked > 0) {
+        if (!confirm(`${unmarked} student(s) haven't been marked. Continue anyway?`)) {
+          return;
+        }
+      }
+      
+      // In a real app, send attendanceData to server
+      console.log('Submitting attendance:', attendanceData);
+      alert('Attendance submitted successfully!');
+      window.location.href = "{{ url_for('instructor.attendance') }}";
+    }
+    
+    function saveDraft() {
+      alert('Draft saved successfully!');
+    }
+    
+    // Message Modal Functions
+    let currentMessageStudent = null;
+    let currentMessageButton = null;
+    
+    function openMessageModal(btn, studentName, studentId) {
+      currentMessageButton = btn;
+      currentMessageStudent = { name: studentName, id: studentId };
+      
+      document.getElementById('modalStudentInfo').textContent = `To: ${studentName} (${studentId})`;
+      document.getElementById('messageText').value = '';
+      document.getElementById('messageModal').classList.remove('hidden');
+    }
+    
+    function closeMessageModal() {
+      document.getElementById('messageModal').classList.add('hidden');
+      currentMessageStudent = null;
+      currentMessageButton = null;
+    }
+    
+    function setMessageTemplate(template) {
+      document.getElementById('messageText').value = template;
+    }
+    
+    function sendMessage() {
+      const message = document.getElementById('messageText').value.trim();
+      
+      if (!message) {
+        alert('Please enter a message.');
+        return;
+      }
+      
+      // In a real app, send message to server/student via mobile app
+      console.log('Sending message to:', currentMessageStudent);
+      console.log('Message:', message);
+      
+      // Update button to show message sent
+      if (currentMessageButton) {
+        currentMessageButton.innerHTML = `
+          <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+          Message Sent
+        `;
+        currentMessageButton.classList.remove('border-purple-300', 'text-purple-600', 'hover:bg-purple-50');
+        currentMessageButton.classList.add('border-green-300', 'text-green-600', 'bg-green-50');
+      }
+      
+      alert(`Message sent to ${currentMessageStudent.name} via AttendGuard Mobile App!`);
+      closeMessageModal();
+    }
+    
+    // Close modal when clicking outside
+    document.getElementById('messageModal').addEventListener('click', function(e) {
+      if (e.target === this) {
+        closeMessageModal();
+      }
+    });
+  </script>
 {% endblock %}
+

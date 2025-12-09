@@ -1,10 +1,50 @@
-<!-- File: landing.html
-     Purpose: Landing page for AttendGuard. Extends `base.html`. Contains hero, features cards, and footer links.
--->
-{% extends 'base.html' %}
-{% block title %}AttendGuard — Home{% endblock %}
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>AttendGuard — Modern Attendance for Real Schools</title>
+  <meta name="description" content="Automate attendance, notify parents, and empower instructors with AttendGuard—the modern school attendance platform.">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root{
+      --color-primary: #2563EB;
+      --color-secondary: #1E40AF;
+    }
+    .card-hover{ transition: transform .2s ease, box-shadow .2s ease; }
+    .card-hover:hover{ transform: translateY(-2px); box-shadow: 0 12px 24px rgba(0,0,0,0.1); }
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: #f1f5f9; }
+    ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+  </style>
+</head>
+<body class="bg-gradient-to-br from-slate-50 to-slate-100 text-slate-900 antialiased">
+  <!-- Nav -->
+  <nav class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <div class="flex items-center gap-8">
+          <a href="/" class="flex items-center gap-2">
+            <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-600 to-blue-700 flex items-center justify-center text-white font-bold text-sm">AG</div>
+            <span class="text-lg font-bold text-slate-900">AttendGuard</span>
+          </a>
+          <div class="hidden md:flex items-center gap-6 text-sm">
+            <a href="#features" class="text-slate-600 hover:text-slate-900">Features</a>
+            <a href="#pricing" class="text-slate-600 hover:text-slate-900">Pricing</a>
+            <a href="#about" class="text-slate-600 hover:text-slate-900">About</a>
+          </div>
+        </div>
+        <div class="flex items-center gap-3">
+          <a href="{{ url_for('auth.login') if url_for else '/login' }}" class="text-sm font-medium text-slate-700 hover:text-slate-900">Login</a>
+          <a href="{{ url_for('auth.login') if url_for else '/login' }}" class="px-4 py-2 rounded-lg text-sm font-semibold bg-blue-600 text-white hover:bg-blue-700">Get Started</a>
+        </div>
+      </div>
+    </div>
+  </nav>
 
-{% block content %}
+  <!-- Main -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
   <!-- Hero -->
   <section class="relative overflow-hidden rounded-2xl">
     <div class="absolute inset-0 -z-10 opacity-30">
@@ -13,15 +53,16 @@
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center py-12 px-6 lg:px-10 xl:px-16">
       <div>
         <h1 class="text-4xl lg:text-5xl font-extrabold tracking-tight text-slate-900">Modern attendance for real schools</h1>
-        <p class="mt-5 text-lg text-slate-600 max-w-2xl">Automate attendance, keep parents informed, and give instructors a clean portal to run classes. AttendGuard brings clarity to your day.</p>
+        <p class="mt-5 text-lg text-slate-600 max-w-2xl">AttendGuard is the complete attendance management platform built for schools, instructors, and parents. We automate daily attendance tracking, instantly notify guardians when students are absent or late, and provide a powerful admin dashboard to manage your entire school ecosystem—all in one intuitive platform.</p>
+        <p class="mt-3 text-base text-slate-600 max-w-2xl">Say goodbye to paper rosters and manual calls. With real-time analytics, seamless integrations, and mobile-friendly design, AttendGuard brings clarity and efficiency to your school day.</p>
         <div class="mt-7 flex flex-wrap gap-3">
-          <a href="{{ url_for('auth.login') if url_for else '#' }}" class="inline-flex items-center px-5 py-3 rounded-lg font-semibold text-white bg-gradient-to-r from-blue-600 to-blue-700 shadow-md hover:shadow-lg">Get Started</a>
-          <a href="#features" class="inline-flex items-center px-5 py-3 rounded-lg border border-slate-300 text-slate-700 hover:bg-white">Learn more</a>
+          <a href="{{ url_for('auth.login') if url_for else '#' }}" class="inline-flex items-center px-5 py-3 rounded-lg font-semibold text-white bg-gradient-to-r from-blue-600 to-blue-700 shadow-md hover:shadow-lg">Get Started Free</a>
+          <a href="#features" class="inline-flex items-center px-5 py-3 rounded-lg border border-slate-300 text-slate-700 hover:bg-white">Explore Features</a>
         </div>
         <div class="mt-8 flex items-center gap-6 text-sm text-slate-600">
-          <div class="flex items-center gap-2"><span class="h-2 w-2 rounded-full bg-blue-600"></span> Trusted by admins</div>
-          <div class="flex items-center gap-2"><span class="h-2 w-2 rounded-full bg-green-600"></span> Instructor friendly</div>
-          <div class="flex items-center gap-2"><span class="h-2 w-2 rounded-full bg-yellow-500"></span> Parent updates</div>
+          <div class="flex items-center gap-2"><span class="h-2 w-2 rounded-full bg-blue-600"></span> Trusted by 500+ schools</div>
+          <div class="flex items-center gap-2"><span class="h-2 w-2 rounded-full bg-green-600"></span> 99.9% uptime</div>
+          <div class="flex items-center gap-2"><span class="h-2 w-2 rounded-full bg-yellow-500"></span> Real-time notifications</div>
         </div>
       </div>
       <div class="order-first lg:order-last">
@@ -55,40 +96,141 @@
   </section>
 
   <!-- Features -->
-  <section id="features" class="mt-12">
+  <section id="features" class="mt-16">
     <div class="text-center">
       <h2 class="text-3xl font-bold text-slate-900">Everything you need, built in</h2>
-      <p class="text-slate-600 mt-2">Designed for administrators, instructors, and parents.</p>
+      <p class="text-slate-600 mt-2 max-w-2xl mx-auto">From automated roll calls to instant parent alerts, AttendGuard streamlines every step of attendance management so you can focus on what matters—educating students.</p>
     </div>
-    <div class="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-      <article class="bg-white rounded-xl p-5 shadow-md border border-slate-200 card-hover">
-        <div class="h-10 w-10 rounded-lg bg-blue-600/10 text-blue-700 flex items-center justify-center">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4M7 5a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/></svg>
+    <div class="mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <article class="bg-white rounded-xl p-6 shadow-md border border-slate-200 card-hover">
+        <div class="h-12 w-12 rounded-lg bg-blue-600/10 text-blue-700 flex items-center justify-center">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4M7 5a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/></svg>
         </div>
-        <h3 class="mt-3 font-semibold text-slate-900">Automated attendance</h3>
-        <p class="mt-2 text-sm text-slate-600">Quickly record attendance using instructor portals and scheduled sessions.</p>
+        <h3 class="mt-4 font-semibold text-slate-900 text-lg">Automated Attendance</h3>
+        <p class="mt-2 text-sm text-slate-600">Instructors can mark attendance in seconds using our intuitive portal. Syncs with your class schedules and student rosters automatically. No more paper lists or manual entry—just tap and go.</p>
       </article>
-      <article class="bg-white rounded-xl p-5 shadow-md border border-slate-200 card-hover">
-        <div class="h-10 w-10 rounded-lg bg-green-600/10 text-green-700 flex items-center justify-center">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6 6 0 10-12 0v3c0 .53-.211 1.04-.586 1.414L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+      <article class="bg-white rounded-xl p-6 shadow-md border border-slate-200 card-hover">
+        <div class="h-12 w-12 rounded-lg bg-green-600/10 text-green-700 flex items-center justify-center">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6 6 0 10-12 0v3c0 .53-.211 1.04-.586 1.414L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
         </div>
-        <h3 class="mt-3 font-semibold text-slate-900">Parent notifications</h3>
-        <p class="mt-2 text-sm text-slate-600">Notify guardians instantly when a student is marked absent or late.</p>
+        <h3 class="mt-4 font-semibold text-slate-900 text-lg">Instant Parent Notifications</h3>
+        <p class="mt-2 text-sm text-slate-600">Parents receive email or SMS alerts the moment their child is marked absent or late. Keep families informed and engaged with zero effort from staff. Fully customizable notification templates.</p>
       </article>
-      <article class="bg-white rounded-xl p-5 shadow-md border border-slate-200 card-hover">
-        <div class="h-10 w-10 rounded-lg bg-indigo-600/10 text-indigo-700 flex items-center justify-center">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
+      <article class="bg-white rounded-xl p-6 shadow-md border border-slate-200 card-hover">
+        <div class="h-12 w-12 rounded-lg bg-indigo-600/10 text-indigo-700 flex items-center justify-center">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
         </div>
-        <h3 class="mt-3 font-semibold text-slate-900">Instructor portal</h3>
-        <p class="mt-2 text-sm text-slate-600">Manage rosters, take attendance, and view schedules.</p>
+        <h3 class="mt-4 font-semibold text-slate-900 text-lg">Instructor Portal</h3>
+        <p class="mt-2 text-sm text-slate-600">A clean, mobile-friendly dashboard for teachers. View your daily schedule, manage student rosters, track attendance history, and export reports—all from one screen. Works on any device.</p>
       </article>
-      <article class="bg-white rounded-xl p-5 shadow-md border border-slate-200 card-hover">
-        <div class="h-10 w-10 rounded-lg bg-amber-600/10 text-amber-700 flex items-center justify-center">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7h18M6 10h12M9 13h6M4 17h16"/></svg>
+      <article class="bg-white rounded-xl p-6 shadow-md border border-slate-200 card-hover">
+        <div class="h-12 w-12 rounded-lg bg-amber-600/10 text-amber-700 flex items-center justify-center">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7h18M6 10h12M9 13h6M4 17h16"/></svg>
         </div>
-        <h3 class="mt-3 font-semibold text-slate-900">Admin control panel</h3>
-        <p class="mt-2 text-sm text-slate-600">Manage schools, subscriptions, and system settings.</p>
+        <h3 class="mt-4 font-semibold text-slate-900 text-lg">Admin Control Panel</h3>
+        <p class="mt-2 text-sm text-slate-600">Manage your entire school from a single dashboard. Add users, configure classes, track subscriptions, and view real-time analytics. Role-based permissions keep your data secure.</p>
       </article>
+    </div>
+  </section>
+
+  <!-- How It Works -->
+  <section class="mt-16">
+    <div class="text-center">
+      <h2 class="text-3xl font-bold text-slate-900">How AttendGuard Works</h2>
+      <p class="text-slate-600 mt-2 max-w-2xl mx-auto">A simple, three-step process that saves hours every week</p>
+    </div>
+    <div class="mt-10 grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div class="text-center">
+        <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-blue-600 text-white text-2xl font-bold">1</div>
+        <h3 class="mt-4 text-lg font-semibold text-slate-900">Set Up Your School</h3>
+        <p class="mt-2 text-sm text-slate-600">Add students, instructors, and class schedules. Our admin panel makes bulk imports and role management a breeze. Invite your team and they're ready to go.</p>
+      </div>
+      <div class="text-center">
+        <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-green-600 text-white text-2xl font-bold">2</div>
+        <h3 class="mt-4 text-lg font-semibold text-slate-900">Record Attendance</h3>
+        <p class="mt-2 text-sm text-slate-600">Instructors open the portal, select their class, and mark students present, absent, or late with one tap. The system logs everything automatically with timestamps and notes.</p>
+      </div>
+      <div class="text-center">
+        <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-amber-600 text-white text-2xl font-bold">3</div>
+        <h3 class="mt-4 text-lg font-semibold text-slate-900">Notify & Analyze</h3>
+        <p class="mt-2 text-sm text-slate-600">Parents receive instant alerts. Admins view real-time dashboards and attendance reports. Export data for accreditation or insights—all in one click.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pricing -->
+  <section id="pricing" class="mt-16">
+    <div class="text-center">
+      <h2 class="text-3xl font-bold text-slate-900">Pricing Information</h2>
+      <p class="text-slate-600 mt-2 max-w-2xl mx-auto">₱25 per student per month. Simple, transparent pricing with all features included.</p>
+    </div>
+    <div class="mt-10 max-w-4xl mx-auto">
+      <!-- Single Plan Card -->
+      <div class="bg-gradient-to-br from-blue-50 to-blue-100 border-2 border-blue-600 rounded-xl p-8 shadow-lg">
+        <div class="text-center">
+          <h3 class="text-2xl font-semibold text-slate-900">Standard Plan</h3>
+          <p class="mt-2 text-sm text-slate-600">For schools of all sizes</p>
+          <div class="mt-6">
+            <span class="text-5xl font-bold text-slate-900">₱25</span>
+            <span class="text-lg text-slate-600">/student/month</span>
+          </div>
+          <p class="mt-3 text-sm text-slate-500">Example: 100 students = ₱2,500/month  •  500 students = ₱12,500/month</p>
+        </div>
+        
+        <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
+          <div class="space-y-3 text-sm text-slate-700">
+            <h4 class="font-semibold text-slate-900 text-base">Core Features</h4>
+            <div class="flex items-center gap-2"><svg class="w-4 h-4 text-blue-600 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg> Unlimited students</div>
+            <div class="flex items-center gap-2"><svg class="w-4 h-4 text-blue-600 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg> Unlimited admin/instructor accounts</div>
+            <div class="flex items-center gap-2"><svg class="w-4 h-4 text-blue-600 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg> Automated attendance tracking</div>
+            <div class="flex items-center gap-2"><svg class="w-4 h-4 text-blue-600 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg> Class schedules & rosters</div>
+            <div class="flex items-center gap-2"><svg class="w-4 h-4 text-blue-600 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg> Mobile-friendly interface</div>
+          </div>
+          
+          <div class="space-y-3 text-sm text-slate-700">
+            <h4 class="font-semibold text-slate-900 text-base">Advanced Features</h4>
+            <div class="flex items-center gap-2"><svg class="w-4 h-4 text-blue-600 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg> Mobile app notifications</div>
+            <div class="flex items-center gap-2"><svg class="w-4 h-4 text-blue-600 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg> Real-time analytics & reporting</div>
+            <div class="flex items-center gap-2"><svg class="w-4 h-4 text-blue-600 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg> Export reports & data</div>
+            <div class="flex items-center gap-2"><svg class="w-4 h-4 text-blue-600 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg> Priority email support</div>
+            <div class="flex items-center gap-2"><svg class="w-4 h-4 text-blue-600 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg> Role-based access control</div>
+          </div>
+        </div>
+
+        <div class="mt-8 pt-6 border-t border-blue-200">
+          <p class="text-center text-sm text-slate-600">
+            <strong>Volume discounts available for 1000+ students.</strong> Contact us for custom enterprise pricing and dedicated support.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- About / Why Choose Us -->
+  <section id="about" class="mt-16">
+    <div class="bg-white border border-slate-200 rounded-2xl p-8 shadow-md">
+      <div class="text-center">
+        <h2 class="text-3xl font-bold text-slate-900">Why Schools Choose AttendGuard</h2>
+        <p class="text-slate-600 mt-2 max-w-3xl mx-auto">Built by educators, for educators. We understand the challenges schools face and designed AttendGuard to solve them.</p>
+      </div>
+      <div class="mt-10 grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div>
+          <h3 class="text-lg font-semibold text-slate-900">Save Time, Every Day</h3>
+          <p class="mt-2 text-sm text-slate-600">Manual attendance takes 5-10 minutes per class. With AttendGuard, it's done in seconds. For a school with 30 classes per day, that's over 2 hours saved—every single day. Multiply that across the year and you've reclaimed hundreds of instructional hours.</p>
+        </div>
+        <div>
+          <h3 class="text-lg font-semibold text-slate-900">Keep Parents in the Loop</h3>
+          <p class="mt-2 text-sm text-slate-600">Parents want to know their kids are safe and attending. Automated notifications eliminate phone tag and ensure guardians are informed the moment attendance is recorded. Build trust and engagement without lifting a finger.</p>
+        </div>
+        <div>
+          <h3 class="text-lg font-semibold text-slate-900">Data-Driven Decisions</h3>
+          <p class="mt-2 text-sm text-slate-600">Real-time dashboards and exportable reports give you insights into attendance patterns, at-risk students, and trends over time. Use this data for interventions, accreditation reports, or grant applications.</p>
+        </div>
+        <div>
+          <h3 class="text-lg font-semibold text-slate-900">Secure & Reliable</h3>
+          <p class="mt-2 text-sm text-slate-600">We use industry-standard encryption, regular backups, and role-based access controls to keep your data safe. 99.9% uptime SLA means AttendGuard is always there when you need it. FERPA and GDPR compliant.</p>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -107,4 +249,31 @@
       </div>
     </div>
   </section>
-{% endblock %}
+
+  <!-- Footer -->
+  <footer class="mt-16 pt-8 pb-4 border-t border-slate-200">
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+      <div>
+        <div class="text-lg font-bold text-slate-900">AttendGuard</div>
+        <p class="mt-1 text-sm text-slate-500">Modern attendance for real schools</p>
+        <p class="mt-2 text-xs text-slate-400">&copy; 2025 AttendGuard. All rights reserved.</p>
+      </div>
+      <div>
+        <p class="text-sm font-medium text-slate-700 mb-3">Connect with us</p>
+        <div class="flex items-center gap-4">
+          <a href="mailto:support@attendguard.io" class="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200 hover:text-slate-900" title="Email">
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"/><path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"/></svg>
+          </a>
+          <a href="https://www.instagram.com/attendguard" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-gradient-to-br from-pink-500 to-purple-600 text-white hover:shadow-lg" title="Instagram">
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+          </a>
+          <a href="https://www.facebook.com/attendguard" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-blue-600 text-white hover:bg-blue-700 hover:shadow-lg" title="Facebook">
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </footer>
+  </main>
+</body>
+</html>

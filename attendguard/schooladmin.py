@@ -1,6 +1,6 @@
 """School admin blueprint for AttendGuard demo.
 """
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, redirect, url_for
 
 schooladmin_bp = Blueprint("schooladmin", __name__, url_prefix="/schooladmin")
 
@@ -22,8 +22,17 @@ def dashboard():
 @schooladmin_bp.route("/subjects", endpoint="subjects")
 def subjects():
     """Manage subjects page"""
-    # Placeholder data
-    return render_template("schooladmin/subjects.html")
+    """Manage subjects page (polished UI)."""
+    # Mock subjects data for UI
+    subjects = [
+        {"code": "MATH101", "name": "Mathematics", "grade": "Grade 10", "instructors": 5, "status": "Active"},
+        {"code": "ENG101", "name": "English Language", "grade": "Grade 10", "instructors": 4, "status": "Active"},
+        {"code": "SCI101", "name": "Science", "grade": "Grade 10", "instructors": 6, "status": "Active"},
+        {"code": "HIST101", "name": "History", "grade": "Grade 10", "instructors": 3, "status": "Active"},
+        {"code": "CS101", "name": "Computer Science", "grade": "Grade 11", "instructors": 2, "status": "Active"},
+        {"code": "PE101", "name": "Physical Education", "grade": "All Grades", "instructors": 4, "status": "Active"},
+    ]
+    return render_template("schooladmin/subjects.html", subjects=subjects, active_page="subjects")
 
 
 @schooladmin_bp.route("/students", endpoint="students")

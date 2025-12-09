@@ -1,0 +1,44 @@
+{# Macro for super admin left sidebar navigation, mirroring school admin style #}
+{% macro superadmin_sidebar(active_page) %}
+<aside class="hidden md:flex md:flex-col bg-white border-r border-slate-200 fixed top-0 left-0 h-screen" style="width: var(--sidebar-width);">
+  <div class="px-4 h-16 border-b border-slate-200 flex items-center">
+    <span class="text-sm font-bold text-slate-900 admin-label">AttendGuard</span>
+  </div>
+
+  <nav class="flex-1 py-2 text-sm">
+    <ul class="px-2 space-y-1">
+      <li>
+        <a href="{{ url_for('superadmin.dashboard') }}" class="admin-menu-item flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-slate-100 {% if active_page=='dashboard' %}bg-blue-50 text-blue-700 font-semibold{% else %}text-slate-700{% endif %}">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+          <span class="admin-label">Dashboard</span>
+        </a>
+      </li>
+      <li class="mt-3 px-3 text-[11px] font-semibold tracking-wide text-slate-500 uppercase admin-group-label">Manage</li>
+      <li>
+        <a href="{{ url_for('superadmin.schools') }}" class="admin-menu-item flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-slate-100 {% if active_page=='schools' %}bg-blue-50 text-blue-700 font-semibold{% else %}text-slate-700{% endif %}">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 20l9-5-9-5-9 5 9 5zm0-10l9-5-9-5-9 5 9 5z"/></svg>
+          <span class="admin-label">Schools</span>
+        </a>
+      </li>
+      <li>
+        <a href="{{ url_for('superadmin.subscriptions') }}" class="admin-menu-item flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-slate-100 {% if active_page=='subscriptions' %}bg-blue-50 text-blue-700 font-semibold{% else %}text-slate-700{% endif %}">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-10v10m8-10v10m-16-10v10"/></svg>
+          <span class="admin-label">Subscriptions</span>
+        </a>
+      </li>
+      <li>
+        <a href="{{ url_for('superadmin.users') }}" class="admin-menu-item flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-slate-100 {% if active_page=='users' %}bg-blue-50 text-blue-700 font-semibold{% else %}text-slate-700{% endif %}">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+          <span class="admin-label">Users</span>
+        </a>
+      </li>
+      <li>
+        <a href="{{ url_for('superadmin.settings') }}" class="admin-menu-item flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-slate-100 {% if active_page=='settings' %}bg-blue-50 text-blue-700 font-semibold{% else %}text-slate-700{% endif %}">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317a1 1 0 011.35-.436l1.286.643a1 1 0 00.894 0l1.286-.643a1 1 0 011.35.436l.643 1.286a1 1 0 000 .894l-.643 1.286a1 1 0 000 .894l.643 1.286a1 1 0 01-.436 1.35l-1.286.643a1 1 0 00-.894 0l-1.286-.643a1 1 0 01-1.35.436l-1.286-.643a1 1 0 00-.894 0l-1.286.643a1 1 0 01-1.35-.436l-.643-1.286a1 1 0 000-.894l.643-1.286a1 1 0 000-.894l-.643-1.286a1 1 0 01.436-1.35l1.286-.643a1 1 0 00.894 0l1.286.643z"/></svg>
+          <span class="admin-label">Settings</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+</aside>
+{% endmacro %}

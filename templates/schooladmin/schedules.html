@@ -11,10 +11,7 @@
   <div class="bg-white rounded-xl shadow-md border border-slate-200 flex flex-col lg:col-span-3">
       <div class="px-5 py-4 border-b border-slate-200 flex items-center justify-between">
         <h2 class="text-sm font-semibold tracking-wide text-slate-800 uppercase">Instructors</h2>
-        <button id="add-instructor-btn" type="button" class="inline-flex items-center gap-1 text-xs font-medium text-blue-600 hover:text-blue-700">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
-          Add
-        </button>
+        <!-- Add instructor removed -->
       </div>
       <div class="p-5 border-b border-slate-100">
         <div class="relative">
@@ -51,56 +48,7 @@
         <p>Select an instructor to view subjects & weekly schedule.</p>
       </div>
     </div>
-    <!-- New Instructor Modal (Desktop style) -->
-    <div id="instructor-modal" class="fixed inset-0 z-50 hidden">
-      <!-- Backdrop -->
-      <div id="instructor-backdrop" class="absolute inset-0 bg-slate-900/40"></div>
-      <!-- Dialog -->
-      <div class="relative mx-auto w-full max-w-2xl mt-20 px-6">
-        <div class="bg-white rounded-xl shadow-2xl border border-slate-200 overflow-hidden">
-          <!-- Header (sticky) -->
-          <div class="px-6 py-4 border-b border-slate-200 flex items-center justify-between">
-            <div>
-              <h3 class="text-base font-semibold text-slate-900">New Instructor</h3>
-              <p class="text-xs text-slate-500">Add a new instructor’s details</p>
-            </div>
-            <button id="instructor-modal-close" type="button" class="p-2 text-slate-500 hover:text-slate-700">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-            </button>
-          </div>
-          <!-- Content (scrollable) -->
-          <form id="instructor-form" class="px-6 py-5 max-h-[70vh] overflow-y-auto">
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label for="inst-name" class="block text-xs font-medium text-slate-700">Full Name<span class="text-rose-500"> *</span></label>
-                <input id="inst-name" name="name" type="text" required placeholder="e.g., Maria Johnson" class="mt-1 w-full px-3 py-2 text-sm rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
-              </div>
-              <div>
-                <label for="inst-gmail" class="block text-xs font-medium text-slate-700">Gmail<span class="text-rose-500"> *</span></label>
-                <input id="inst-gmail" name="gmail" type="email" required placeholder="name@gmail.com" class="mt-1 w-full px-3 py-2 text-sm rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
-              </div>
-              <div>
-                <label for="inst-contact" class="block text-xs font-medium text-slate-700">Contact Number <span class="text-slate-400">(optional)</span></label>
-                <input id="inst-contact" name="contact" type="tel" placeholder="e.g., +63 912 345 6789" class="mt-1 w-full px-3 py-2 text-sm rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
-              </div>
-              <div>
-                <label for="inst-address" class="block text-xs font-medium text-slate-700">Address</label>
-                <input id="inst-address" name="address" type="text" placeholder="Street, City, Province" class="mt-1 w-full px-3 py-2 text-sm rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
-              </div>
-              <div class="sm:col-span-2">
-                <label for="inst-notes" class="block text-xs font-medium text-slate-700">Additional Info</label>
-                <textarea id="inst-notes" name="notes" rows="4" placeholder="Notes, specialization, availability, etc." class="mt-1 w-full px-3 py-2 text-sm rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"></textarea>
-              </div>
-            </div>
-            <!-- Footer (sticky) -->
-            <div class="mt-6 pt-4 border-t border-slate-200 flex items-center justify-end gap-3">
-              <button type="button" id="instructor-cancel" class="px-3 py-2 text-xs rounded-lg border border-slate-300 text-slate-700 hover:bg-slate-50">Cancel</button>
-              <button type="submit" class="px-3 py-2 text-xs rounded-lg bg-blue-600 text-white hover:bg-blue-700">Save</button>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
+    <!-- Instructor add modal removed -->
     <!-- View Instructor Modal (Desktop style, read-only) -->
     <div id="instructor-view-modal" class="fixed inset-0 z-50 hidden">
       <!-- Backdrop -->
@@ -150,14 +98,11 @@
       </div>
     </div>
 
-    <!-- Assign Subject Modal (Desktop style) -->
+    <!-- Assign Subject Modal (Restored) -->
     <div id="assign-modal" class="fixed inset-0 z-50 hidden">
-      <!-- Backdrop -->
       <div id="assign-backdrop" class="absolute inset-0 bg-slate-900/40"></div>
-      <!-- Dialog -->
       <div class="relative mx-auto w-full max-w-2xl mt-20 px-6">
         <div class="bg-white rounded-xl shadow-2xl border border-slate-200 overflow-hidden">
-          <!-- Header -->
           <div class="px-6 py-4 border-b border-slate-200 flex items-center justify-between">
             <div>
               <h3 class="text-base font-semibold text-slate-900">Assign Subject</h3>
@@ -167,7 +112,6 @@
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
             </button>
           </div>
-          <!-- Content -->
           <form id="assign-form" class="px-6 py-5 max-h-[70vh] overflow-y-auto">
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div class="sm:col-span-2">
@@ -201,10 +145,57 @@
                 <input id="assign-room" name="room" type="text" placeholder="e.g., Room 101" class="mt-1 w-full px-3 py-2 text-sm rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
               </div>
             </div>
-            <!-- Footer -->
             <div class="mt-6 pt-4 border-t border-slate-200 flex items-center justify-end gap-3">
               <button type="button" id="assign-cancel" class="px-3 py-2 text-xs rounded-lg border border-slate-300 text-slate-700 hover:bg-slate-50">Cancel</button>
               <button type="submit" class="px-3 py-2 text-xs rounded-lg bg-indigo-600 text-white hover:bg-indigo-700">Assign</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Add Slot Modal -->
+    <div id="slot-modal" class="fixed inset-0 z-50 hidden">
+      <div id="slot-backdrop" class="absolute inset-0 bg-slate-900/40"></div>
+      <div class="relative mx-auto w-full max-w-xl mt-20 px-6">
+        <div class="bg-white rounded-xl shadow-2xl border border-slate-200 overflow-hidden">
+          <div class="px-6 py-4 border-b border-slate-200 flex items-center justify-between">
+            <div>
+              <h3 class="text-base font-semibold text-slate-900">Add Slot</h3>
+              <p class="text-xs text-slate-500">Create an empty time block for the selected instructor</p>
+            </div>
+            <button id="slot-close" type="button" class="p-2 text-slate-500 hover:text-slate-700">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+          </div>
+          <form id="slot-form" class="px-6 py-5">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label for="slot-day" class="block text-xs font-medium text-slate-700">Day<span class="text-rose-500"> *</span></label>
+                <select id="slot-day" required class="mt-1 w-full px-3 py-2 text-sm rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                  <option value="Monday">Monday</option>
+                  <option value="Tuesday">Tuesday</option>
+                  <option value="Wednesday">Wednesday</option>
+                  <option value="Thursday">Thursday</option>
+                  <option value="Friday">Friday</option>
+                </select>
+              </div>
+              <div>
+                <label for="slot-room" class="block text-xs font-medium text-slate-700">Room <span class="text-slate-400">(optional)</span></label>
+                <input id="slot-room" type="text" placeholder="e.g., Room 101" class="mt-1 w-full px-3 py-2 text-sm rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
+              </div>
+              <div>
+                <label for="slot-start" class="block text-xs font-medium text-slate-700">Start Time<span class="text-rose-500"> *</span></label>
+                <input id="slot-start" type="time" required class="mt-1 w-full px-3 py-2 text-sm rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
+              </div>
+              <div>
+                <label for="slot-end" class="block text-xs font-medium text-slate-700">End Time<span class="text-rose-500"> *</span></label>
+                <input id="slot-end" type="time" required class="mt-1 w-full px-3 py-2 text-sm rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
+              </div>
+            </div>
+            <div class="mt-6 pt-4 border-t border-slate-200 flex items-center justify-end gap-3">
+              <button type="button" id="slot-cancel" class="px-3 py-2 text-xs rounded-lg border border-slate-300 text-slate-700 hover:bg-slate-50">Cancel</button>
+              <button type="submit" class="px-3 py-2 text-xs rounded-lg bg-blue-600 text-white hover:bg-blue-700">Add Slot</button>
             </div>
           </form>
         </div>
@@ -215,12 +206,14 @@
   <div class="bg-white rounded-xl shadow-md border border-slate-200 flex flex-col lg:col-span-3">
       <div class="px-5 py-4 border-b border-slate-200 flex items-center justify-between">
         <h2 class="text-sm font-semibold tracking-wide text-slate-800 uppercase">Subjects</h2>
-        <button class="inline-flex items-center gap-1 text-xs font-medium text-blue-600 hover:text-blue-700">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
-          Add
-        </button>
+        <!-- Add subject removed in Schedules panel -->
       </div>
       <div class="p-5 flex-1 flex flex-col">
+        <!-- Subject search -->
+        <div class="relative mb-4">
+          <input id="subject-search" type="text" placeholder="Search subject..." class="w-full text-sm px-3 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
+          <svg class="w-4 h-4 absolute right-3 top-2.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35M10 18a8 8 0 100-16 8 8 0 000 16z"/></svg>
+        </div>
         <!-- Mock Subject Data: code + name (loop over all subjects) -->
         <ul class="space-y-2 overflow-auto pr-1 flex-1" id="subject-list">
           {% for sub in subjects %}
@@ -407,21 +400,26 @@
         const subjects = document.querySelectorAll('.subject-item');
         const weeklyTitle = document.getElementById('weekly-title');
         const weeklySub = document.getElementById('weekly-sub');
-        const assignBtn = document.getElementById('assign-btn');
+  const assignBtn = document.getElementById('assign-btn');
         const removeBtn = document.getElementById('remove-btn');
-        const addSlotBtn = document.getElementById('add-slot-btn');
-        const addInstructorBtn = document.getElementById('add-instructor-btn');
-        const instructorModal = document.getElementById('instructor-modal');
-  const instructorForm = document.getElementById('instructor-form');
-        const instructorModalClose = document.getElementById('instructor-modal-close');
-        const instructorCancel = document.getElementById('instructor-cancel');
-  const instructorBackdrop = document.getElementById('instructor-backdrop');
+  const addSlotBtn = document.getElementById('add-slot-btn');
+  // Add Slot modal refs
+  const slotModal = document.getElementById('slot-modal');
+  const slotBackdrop = document.getElementById('slot-backdrop');
+  const slotForm = document.getElementById('slot-form');
+  const slotClose = document.getElementById('slot-close');
+  const slotCancel = document.getElementById('slot-cancel');
+  const slotDay = document.getElementById('slot-day');
+  const slotStart = document.getElementById('slot-start');
+  const slotEnd = document.getElementById('slot-end');
+  const slotRoom = document.getElementById('slot-room');
   const viewButtons = document.querySelectorAll('.view-instructor-btn');
   const removeButtons = document.querySelectorAll('.remove-instructor-btn');
   const instructorViewModal = document.getElementById('instructor-view-modal');
   const instructorViewClose = document.getElementById('instructor-view-close');
   const instructorViewCancel = document.getElementById('instructor-view-cancel');
   const instructorViewBackdrop = document.getElementById('instructor-view-backdrop');
+  const subjectSearch = document.getElementById('subject-search');
 
   // Assign Subject modal refs
   const assignModal = document.getElementById('assign-modal');
@@ -449,30 +447,20 @@
         }
 
         function updateActionButtons() {
-          const enabled = !!(selectedInstructor && selectedSubject);
-          assignBtn.disabled = !enabled;
+          const canAssign = !!selectedInstructor; // allow opening modal with instructor selected
+          assignBtn.disabled = !canAssign;
           // Remove requires a selected slot; keep disabled for now until slot selection is implemented
           removeBtn.disabled = true;
-          assignBtn.classList.toggle('opacity-50', !enabled);
+          assignBtn.classList.toggle('opacity-50', !canAssign);
           removeBtn.classList.toggle('opacity-50', true);
-          assignBtn.classList.toggle('cursor-not-allowed', !enabled);
+          assignBtn.classList.toggle('cursor-not-allowed', !canAssign);
           removeBtn.classList.toggle('cursor-not-allowed', true);
           addSlotBtn.classList.toggle('opacity-50', !selectedInstructor);
           addSlotBtn.classList.toggle('cursor-not-allowed', !selectedInstructor);
           addSlotBtn.disabled = !selectedInstructor;
         }
 
-        function openInstructorModal() {
-          instructorModal.classList.remove('hidden');
-          // focus first field
-          const nameField = document.getElementById('inst-name');
-          if (nameField) nameField.focus();
-        }
-
-        function closeInstructorModal() {
-          instructorModal.classList.add('hidden');
-          instructorForm.reset();
-        }
+        // Instructor add modal removed
 
         function clearSelections(type) {
           const list = type === 'instructor' ? instructors : subjects;
@@ -549,6 +537,168 @@
           });
         });
 
+        // Subject search filter
+        if (subjectSearch) {
+          subjectSearch.addEventListener('input', () => {
+            const q = subjectSearch.value.toLowerCase().trim();
+            document.querySelectorAll('#subject-list .subject-item').forEach(item => {
+              const code = (item.dataset.subjectCode || '').toLowerCase();
+              const name = (item.dataset.subjectName || '').toLowerCase();
+              const tag = (item.dataset.subjectTag || '').toLowerCase();
+              const match = !q || code.includes(q) || name.includes(q) || tag.includes(q);
+              const li = item.closest('li');
+              if (li) li.style.display = match ? '' : 'none';
+            });
+          });
+        }
+
+        // Assign subject modal removed
+
+        // Assign button opens modal with at least instructor selected
+        assignBtn.addEventListener('click', () => {
+          if (!selectedInstructor) return;
+          openAssignModal();
+        });
+
+        addSlotBtn.addEventListener('click', () => {
+          if (!selectedInstructor) {
+            const titleEl = document.getElementById('weekly-title');
+            titleEl?.classList.add('text-rose-600');
+            setTimeout(() => titleEl?.classList.remove('text-rose-600'), 900);
+            return;
+          }
+          openSlotModal();
+        });
+
+        removeBtn.addEventListener('click', () => {
+          // Until slot selection is implemented, keep disabled
+          return;
+        });
+
+        // Instructor add modal handlers removed
+
+        // Assign modal handlers (restored)
+        assignClose?.addEventListener('click', closeAssignModal);
+        assignCancel?.addEventListener('click', closeAssignModal);
+        assignBackdrop?.addEventListener('click', closeAssignModal);
+        assignForm?.addEventListener('submit', (e) => {
+          e.preventDefault();
+          const instructorId = assignInstructorSelect.value;
+          const subjectCode = assignSubjectSelect.value;
+          const subjectName = assignSubjectSelect.options[assignSubjectSelect.selectedIndex]?.textContent?.split(' — ').slice(1).join(' — ') || '';
+          const day = assignDaySelect.value;
+          const start = assignStartInput.value;
+          const end = assignEndInput.value;
+          const room = document.getElementById('assign-room')?.value || '';
+
+          if (!instructorId || !subjectCode || !day || !start || !end) { return; }
+          if (start >= end) { return; }
+          addClassToGrid({ day, start, end, room, subjectName });
+          closeAssignModal();
+        });
+
+        function addClassToGrid({ day, start, end, room, subjectName }){
+          const tableBody = document.querySelector('table.w-full tbody');
+          if (!tableBody) return;
+          const dayIndex = { 'Monday': 1, 'Tuesday': 2, 'Wednesday': 3, 'Thursday': 4, 'Friday': 5 }[day] || 1;
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td class="px-4 py-3 whitespace-nowrap text-sm font-medium text-slate-600">${formatTimeLabel(start)}</td>
+            ${[1,2,3,4,5].map(i => i===dayIndex ? `
+              <td class=\"px-4 py-3\">
+                <div class=\"p-3 bg-gradient-to-br from-blue-50 to-blue-100 border-l-4 border-blue-500 rounded\">
+                  <div class=\"font-semibold text-sm text-slate-900\">${escapeHtml(subjectName)}</div>
+                  <div class=\"text-xs text-slate-600 mt-1\">${formatTimeLabel(start)}–${formatTimeLabel(end)}</div>
+                  ${room ? `<div class=\\\"text-xs text-slate-500 mt-1\\\">${escapeHtml(room)}</div>` : ''}
+                </div>
+              </td>
+            ` : '<td class=\"px-4 py-3 bg-slate-50\"></td>').join('')}
+          `;
+          tableBody.appendChild(tr);
+        }
+
+        function escapeHtml(str){
+          const div = document.createElement('div');
+          div.innerText = String(str || '');
+          return div.innerHTML;
+        }
+
+  // View modal close handlers
+  instructorViewClose.addEventListener('click', () => instructorViewModal.classList.add('hidden'));
+  instructorViewCancel.addEventListener('click', () => instructorViewModal.classList.add('hidden'));
+  instructorViewBackdrop.addEventListener('click', () => instructorViewModal.classList.add('hidden'));
+
+        // Close on ESC
+        document.addEventListener('keydown', (e) => {
+          // ESC closes assign/slot modal
+          if (e.key === 'Escape' && !assignModal.classList.contains('hidden')) {
+            closeAssignModal();
+          }
+            if (e.key === 'Escape' && !slotModal.classList.contains('hidden')) {
+              closeSlotModal();
+            }
+        });
+
+          function openSlotModal(){
+            // Default day/time
+            slotDay.value = slotDay.value || 'Monday';
+            slotStart.value = slotStart.value || '08:00';
+            slotEnd.value = slotEnd.value || '09:00';
+            slotModal.classList.remove('hidden');
+          }
+          function closeSlotModal(){
+            slotModal.classList.add('hidden');
+            slotForm.reset();
+          }
+
+          // addSlotBtn handler defined above; remove duplicate to avoid conflicting behavior
+          slotBackdrop?.addEventListener('click', closeSlotModal);
+          slotClose?.addEventListener('click', closeSlotModal);
+          slotCancel?.addEventListener('click', closeSlotModal);
+          slotForm?.addEventListener('submit', (e)=>{
+            e.preventDefault();
+            if (!selectedInstructor){ return; }
+            const day = slotDay.value;
+            const start = slotStart.value;
+            const end = slotEnd.value;
+            const room = slotRoom.value.trim();
+            if (!day || !start || !end){ return; }
+            if (start >= end){ return; }
+            addSlotToGrid({ day, start, end, room });
+            closeSlotModal();
+          });
+
+        function addSlotToGrid({ day, start, end, room }){
+          const tableBody = document.querySelector('table.w-full tbody');
+          if (!tableBody) return;
+          const dayIndex = { 'Monday': 1, 'Tuesday': 2, 'Wednesday': 3, 'Thursday': 4, 'Friday': 5 }[day] || 1;
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td class="px-4 py-3 whitespace-nowrap text-sm font-medium text-slate-600">${formatTimeLabel(start)}</td>
+            ${[1,2,3,4,5].map(i => i===dayIndex ? `
+              <td class=\"px-4 py-3\">
+                <div class=\"p-3 bg-gradient-to-br from-slate-50 to-slate-100 border-l-4 border-slate-400 rounded\">
+                  <div class=\"font-semibold text-sm text-slate-900\">Empty Slot</div>
+                  <div class=\"text-xs text-slate-600 mt-1\">${start}–${end}</div>
+                  ${room ? `<div class=\\\"text-xs text-slate-500 mt-1\\\">${room}</div>` : ''}
+                </div>
+              </td>
+            ` : '<td class=\"px-4 py-3 bg-slate-50\"></td>').join('')}
+          `;
+          tableBody.appendChild(tr);
+        }
+
+        function formatTimeLabel(t){
+          try {
+            const [h,m] = t.split(':').map(Number);
+            const ampm = h >= 12 ? 'PM' : 'AM';
+            const hh = ((h + 11) % 12) + 1;
+            return `${hh}:${String(m).padStart(2,'0')} ${ampm}`;
+          } catch { return t; }
+        }
+
+  // Assign modal refs declared above
+
         function openAssignModal() {
           // Populate instructors
           assignInstructorSelect.innerHTML = '';
@@ -572,7 +722,7 @@
           });
 
           // Defaults for time and day
-          if (!assignDaySelect.value) assignDaySelect.value = 'Monday';
+          assignDaySelect.value = assignDaySelect.value || 'Monday';
           assignStartInput.value = assignStartInput.value || '08:00';
           assignEndInput.value = assignEndInput.value || '09:00';
 
@@ -583,93 +733,6 @@
           assignModal.classList.add('hidden');
           assignForm.reset();
         }
-
-        assignBtn.addEventListener('click', () => {
-          if (!(selectedInstructor && selectedSubject)) return;
-          openAssignModal();
-        });
-
-        addSlotBtn.addEventListener('click', () => {
-          if (!selectedInstructor) return;
-          alert(`Add Slot for ${selectedInstructor.name}: open modal (day/time/subject/room)`);
-        });
-
-        removeBtn.addEventListener('click', () => {
-          // Until slot selection is implemented, keep disabled
-          return;
-        });
-
-        // Add Instructor modal events
-        if (addInstructorBtn) {
-          addInstructorBtn.addEventListener('click', openInstructorModal);
-        }
-        instructorModalClose.addEventListener('click', closeInstructorModal);
-        instructorCancel.addEventListener('click', closeInstructorModal);
-        instructorForm.addEventListener('submit', (e) => {
-          e.preventDefault();
-          const name = (document.getElementById('inst-name')?.value || '').trim();
-          const gmail = (document.getElementById('inst-gmail')?.value || '').trim();
-          const contact = (document.getElementById('inst-contact')?.value || '').trim();
-          const address = (document.getElementById('inst-address')?.value || '').trim();
-          const notes = (document.getElementById('inst-notes')?.value || '').trim();
-          if (!name) {
-            alert('Please enter the instructor\'s full name.');
-            return;
-          }
-          if (!gmail) {
-            alert('Please enter a Gmail address.');
-            return;
-          }
-          // Placeholder: POST to backend to create instructor, then refresh list
-          alert(`Instructor created: ${name}\nGmail: ${gmail}${contact ? '\nContact: ' + contact : ''}${address ? '\nAddress: ' + address : ''}${notes ? '\nNotes: ' + notes : ''}`);
-          closeInstructorModal();
-        });
-
-        // Backdrop click closes modal
-        instructorBackdrop.addEventListener('click', closeInstructorModal);
-
-        // Assign modal handlers
-        assignClose.addEventListener('click', closeAssignModal);
-        assignCancel.addEventListener('click', closeAssignModal);
-        assignBackdrop.addEventListener('click', closeAssignModal);
-        assignForm.addEventListener('submit', (e) => {
-          e.preventDefault();
-          const instructorId = assignInstructorSelect.value;
-          const instructorName = assignInstructorSelect.options[assignInstructorSelect.selectedIndex]?.textContent || '';
-          const subjectCode = assignSubjectSelect.value;
-          const subjectName = assignSubjectSelect.options[assignSubjectSelect.selectedIndex]?.textContent?.split(' — ').slice(1).join(' — ') || '';
-          const day = assignDaySelect.value;
-          const start = assignStartInput.value;
-          const end = assignEndInput.value;
-          const room = document.getElementById('assign-room')?.value || '';
-
-          if (!instructorId || !subjectCode || !day || !start || !end) {
-            alert('Please complete all required fields.');
-            return;
-          }
-          if (start >= end) {
-            alert('End time must be later than start time.');
-            return;
-          }
-          // Placeholder: send to backend and refresh schedule grid
-          alert(`Assigned ${subjectCode} — ${subjectName} to ${instructorName} on ${day} ${start}–${end}${room ? ' @ ' + room : ''}`);
-          closeAssignModal();
-        });
-
-  // View modal close handlers
-  instructorViewClose.addEventListener('click', () => instructorViewModal.classList.add('hidden'));
-  instructorViewCancel.addEventListener('click', () => instructorViewModal.classList.add('hidden'));
-  instructorViewBackdrop.addEventListener('click', () => instructorViewModal.classList.add('hidden'));
-
-        // Close on ESC
-        document.addEventListener('keydown', (e) => {
-          if (e.key === 'Escape' && !instructorModal.classList.contains('hidden')) {
-            closeInstructorModal();
-          }
-          if (e.key === 'Escape' && !assignModal.classList.contains('hidden')) {
-            closeAssignModal();
-          }
-        });
 
         updateHeader();
         updateActionButtons();

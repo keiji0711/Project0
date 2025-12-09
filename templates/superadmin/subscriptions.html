@@ -1,0 +1,183 @@
+{% extends 'superadmin/base_super_admin.html' %}
+{% block page_title %}Subscriptions{% endblock %}
+{% set active_page = 'subscriptions' %}
+
+{% block admin_content %}
+  <!-- Page header -->
+  <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3 mb-5">
+    <div>
+      <h2 class="text-xl font-semibold text-slate-900">Subscriptions</h2>
+      <p class="text-sm text-slate-500">Manage plans, seats, and renewal for all schools</p>
+    </div>
+    <div class="flex items-center gap-2">
+      <button id="btnNewSub" class="inline-flex items-center gap-2 px-3 py-2 rounded-md font-medium bg-blue-600 text-white hover:bg-blue-700">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+        New Subscription
+      </button>
+    </div>
+  </div>
+
+  <!-- Toolbar -->
+  <div class="bg-white border border-slate-200 rounded-xl p-3 mb-4 flex flex-col sm:flex-row sm:items-center gap-3">
+    <div class="relative flex-1 min-w-[220px]">
+      <svg class="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35M10 18a8 8 0 100-16 8 8 0 000 16z"/></svg>
+      <input id="searchInput" type="text" placeholder="Search schools or plans" class="w-full pl-9 pr-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
+    </div>
+    <div class="flex items-center gap-2">
+      <select id="statusFilter" class="px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm">
+        <option value="">All Status</option>
+        <option>Active</option>
+        <option>Trialing</option>
+        <option>Paused</option>
+        <option>Canceled</option>
+      </select>
+      <select id="planFilter" class="px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm">
+        <option value="">All Plans</option>
+        <option>Free</option>
+        <option>Pro</option>
+        <option>Enterprise</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Subscriptions table -->
+  <div class="overflow-x-auto bg-white border border-slate-200 rounded-xl">
+    <table class="min-w-full divide-y divide-slate-200">
+      <thead class="bg-slate-50">
+        <tr>
+          <th class="px-4 py-3 text-left text-xs font-semibold text-slate-600">School</th>
+          <th class="px-4 py-3 text-left text-xs font-semibold text-slate-600">Plan</th>
+          <th class="px-4 py-3 text-left text-xs font-semibold text-slate-600">Status</th>
+          <th class="px-4 py-3 text-left text-xs font-semibold text-slate-600">Seats</th>
+          <th class="px-4 py-3 text-left text-xs font-semibold text-slate-600">Renewal</th>
+          <th class="px-4 py-3 text-left text-xs font-semibold text-slate-600">MRR</th>
+          <th class="px-4 py-3 text-right text-xs font-semibold text-slate-600">Actions</th>
+        </tr>
+      </thead>
+      <tbody id="subsBody" class="divide-y divide-slate-100">
+        {% for s in subscriptions %}
+        <tr class="row">
+          <td class="px-4 py-3 text-sm text-slate-800 school">{{ s.school }}</td>
+          <td class="px-4 py-3 text-sm plan">
+            <span class="inline-flex items-center gap-1 px-2 py-1 rounded-md text-xs font-medium
+              {% if s.plan=='Free' %} bg-slate-100 text-slate-700
+              {% elif s.plan=='Pro' %} bg-blue-100 text-blue-700
+              {% else %} bg-amber-100 text-amber-700{% endif %}">
+              {{ s.plan }}
+            </span>
+          </td>
+          <td class="px-4 py-3 text-sm status">
+            <span class="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium
+              {% if s.status=='Active' %} bg-emerald-100 text-emerald-700
+              {% elif s.status=='Trialing' %} bg-violet-100 text-violet-700
+              {% elif s.status=='Paused' %} bg-amber-100 text-amber-700
+              {% else %} bg-rose-100 text-rose-700{% endif %}">{{ s.status }}</span>
+          </td>
+          <td class="px-4 py-3 text-sm seats">
+            <span class="font-medium">{{ s.used_seats }}</span>
+            <span class="text-slate-400">/</span>
+            <span class="text-slate-600">{{ s.seats }}</span>
+          </td>
+          <td class="px-4 py-3 text-sm renewal">{{ s.renewal }}</td>
+          <td class="px-4 py-3 text-sm mrr">${{ '%.2f'|format(s.price_per_month) }}</td>
+          <td class="px-4 py-3 text-sm text-right">
+            <button class="inline-flex items-center justify-center w-8 h-8 rounded hover:bg-slate-100" title="Edit">
+              <svg class="w-4 h-4 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5h2m-1-1v2m-7 7l6.586-6.586a2 2 0 112.828 2.828L7.828 15H5v-2z"/></svg>
+            </button>
+            <button class="inline-flex items-center justify-center w-8 h-8 rounded hover:bg-slate-100" title="More">
+              <svg class="w-4 h-4 text-slate-600" fill="currentColor" viewBox="0 0 20 20"><path d="M10 3a1.5 1.5 0 110 3 1.5 1.5 0 010-3zm0 5.5a1.5 1.5 0 110 3 1.5 1.5 0 010-3zM10 15a1.5 1.5 0 110 3 1.5 1.5 0 010-3z"/></svg>
+            </button>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- New Subscription Modal -->
+  <div id="newSubModal" class="fixed inset-0 z-50 hidden" aria-hidden="true">
+    <div class="absolute inset-0 bg-slate-900/40"></div>
+    <div class="relative mx-auto mt-20 w-full max-w-lg">
+      <div class="bg-white rounded-xl shadow-xl border border-slate-200">
+        <div class="flex items-center justify-between px-4 py-3 border-b border-slate-200">
+          <h3 class="text-sm font-semibold text-slate-900">New Subscription</h3>
+          <button id="newSubClose" class="inline-flex items-center justify-center w-8 h-8 rounded hover:bg-slate-100" title="Close">
+            <svg class="w-4 h-4 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+          </button>
+        </div>
+        <form class="px-4 py-4">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <label class="text-sm">
+              <span class="text-slate-700">School</span>
+              <input type="text" class="mt-1 w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="School name" />
+            </label>
+            <label class="text-sm">
+              <span class="text-slate-700">Plan</span>
+              <select class="mt-1 w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                <option>Free</option>
+                <option selected>Pro</option>
+                <option>Enterprise</option>
+              </select>
+            </label>
+            <label class="text-sm">
+              <span class="text-slate-700">Seats</span>
+              <input type="number" min="1" value="25" class="mt-1 w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
+            </label>
+            <label class="text-sm">
+              <span class="text-slate-700">Status</span>
+              <select class="mt-1 w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                <option selected>Active</option>
+                <option>Trialing</option>
+                <option>Paused</option>
+              </select>
+            </label>
+          </div>
+          <div class="mt-5 flex items-center justify-end gap-2">
+            <button type="button" id="newSubCancel" class="px-3 py-2 rounded-lg border border-slate-200 text-slate-700 hover:bg-slate-50">Cancel</button>
+            <button type="submit" class="px-3 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700">Create</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  (function(){
+    // Modal open/close
+    const modal = document.getElementById('newSubModal');
+    const openBtn = document.getElementById('btnNewSub');
+    const closeBtn = document.getElementById('newSubClose');
+    const cancelBtn = document.getElementById('newSubCancel');
+    function open(){ if(modal) modal.classList.remove('hidden'); }
+    function close(){ if(modal) modal.classList.add('hidden'); }
+    if(openBtn) openBtn.addEventListener('click', open);
+    if(closeBtn) closeBtn.addEventListener('click', close);
+    if(cancelBtn) cancelBtn.addEventListener('click', close);
+    if(modal) modal.addEventListener('click', (e)=>{ if(e.target===modal) close(); });
+
+    // Simple client-side filtering
+    const search = document.getElementById('searchInput');
+    const statusSel = document.getElementById('statusFilter');
+    const planSel = document.getElementById('planFilter');
+    const rows = Array.from(document.querySelectorAll('#subsBody .row'));
+    function normalize(s){ return (s||'').toString().toLowerCase(); }
+    function applyFilters(){
+      const q = normalize(search && search.value);
+      const st = normalize(statusSel && statusSel.value);
+      const pl = normalize(planSel && planSel.value);
+      rows.forEach(row => {
+        const school = normalize(row.querySelector('.school')?.textContent);
+        const plan = normalize(row.querySelector('.plan')?.textContent);
+        const status = normalize(row.querySelector('.status')?.textContent);
+        const matchQ = !q || school.includes(q) || plan.includes(q);
+        const matchS = !st || status.includes(st);
+        const matchP = !pl || plan.includes(pl);
+        row.style.display = (matchQ && matchS && matchP) ? '' : 'none';
+      });
+    }
+    [search, statusSel, planSel].forEach(el => { if(el) el.addEventListener('input', applyFilters); });
+  })();
+</script>
+{% endblock %}

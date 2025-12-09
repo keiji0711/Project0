@@ -1,0 +1,194 @@
+{% extends 'superadmin/base_super_admin.html' %}
+{% block page_title %}Users{% endblock %}
+{% set active_page = 'users' %}
+
+{% block admin_content %}
+  <!-- Header -->
+  <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3 mb-5">
+    <div>
+      <h2 class="text-xl font-semibold text-slate-900">Users</h2>
+      <p class="text-sm text-slate-500">Manage global users across all schools</p>
+    </div>
+    <div class="flex items-center gap-2">
+      <button id="btnNewUser" class="inline-flex items-center gap-2 px-3 py-2 rounded-md font-medium bg-blue-600 text-white hover:bg-blue-700">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+        New User
+      </button>
+    </div>
+  </div>
+
+  <!-- Toolbar -->
+  <div class="bg-white border border-slate-200 rounded-xl p-3 mb-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+    <div class="relative">
+      <svg class="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35M10 18a8 8 0 100-16 8 8 0 000 16z"/></svg>
+      <input id="userSearch" type="text" placeholder="Search name, email, school" class="w-full pl-9 pr-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
+    </div>
+    <div>
+      <select id="roleFilter" class="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm">
+        <option value="">All Roles</option>
+        <option>Super Admin</option>
+        <option>School Admin</option>
+        <option>Instructor</option>
+      </select>
+    </div>
+    <div>
+      <select id="statusFilter" class="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm">
+        <option value="">All Status</option>
+        <option>Active</option>
+        <option>Suspended</option>
+        <option>Invited</option>
+      </select>
+    </div>
+    <div class="flex items-center gap-2">
+      <button id="viewGrid" class="px-3 py-2 rounded-lg border border-slate-200 text-slate-700 hover:bg-slate-50 hidden">Grid</button>
+      <button id="viewTable" class="px-3 py-2 rounded-lg border border-slate-200 text-slate-700 hover:bg-slate-50 hidden">Table</button>
+    </div>
+  </div>
+
+  <!-- Users grid -->
+  <div id="usersGrid" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
+    {% for u in users %}
+    <div class="user-card bg-white border border-slate-200 rounded-xl p-4 flex items-center gap-4" data-role="{{ u.role }}" data-status="{{ u.status }}" data-school="{{ u.school }}" data-q="{{ (u.name ~ ' ' ~ u.email ~ ' ' ~ u.school)|lower }}">
+      <div class="shrink-0 inline-flex items-center justify-center w-12 h-12 rounded-full ring-2 ring-blue-100 bg-blue-600 text-white font-semibold">
+        {{ u.initials }}
+      </div>
+      <div class="min-w-0 flex-1">
+        <div class="flex items-center justify-between gap-2">
+          <div class="min-w-0">
+            <p class="truncate font-semibold text-slate-900">{{ u.name }}</p>
+            <p class="truncate text-sm text-slate-500">{{ u.email }}</p>
+          </div>
+          <div class="relative">
+            <button class="menu-btn inline-flex items-center justify-center w-8 h-8 rounded hover:bg-slate-100" title="More">
+              <svg class="w-4 h-4 text-slate-600" fill="currentColor" viewBox="0 0 20 20"><path d="M10 3a1.5 1.5 0 110 3 1.5 1.5 0 010-3zm0 5.5a1.5 1.5 0 110 3 1.5 1.5 0 010-3zM10 15a1.5 1.5 0 110 3 1.5 1.5 0 010-3z"/></svg>
+            </button>
+            <div class="menu hidden absolute right-0 mt-2 w-40 bg-white border border-slate-200 rounded-lg shadow-lg py-1">
+              <button class="w-full text-left px-3 py-2 text-sm hover:bg-slate-50">Edit</button>
+              <button class="w-full text-left px-3 py-2 text-sm hover:bg-slate-50">Reset Password</button>
+              <div class="my-1 border-t border-slate-200"></div>
+              <button class="w-full text-left px-3 py-2 text-sm text-rose-600 hover:bg-rose-50">Remove</button>
+            </div>
+          </div>
+        </div>
+        <div class="mt-2 flex flex-wrap items-center gap-2 text-xs">
+          <span class="inline-flex items-center px-2 py-1 rounded-md font-medium
+            {% if u.role=='Super Admin' %}bg-violet-100 text-violet-700{% elif u.role=='School Admin' %}bg-blue-100 text-blue-700{% else %}bg-slate-100 text-slate-700{% endif %}">{{ u.role }}</span>
+          <span class="inline-flex items-center px-2 py-1 rounded-full font-medium
+            {% if u.status=='Active' %}bg-emerald-100 text-emerald-700{% elif u.status=='Invited' %}bg-amber-100 text-amber-700{% else %}bg-rose-100 text-rose-700{% endif %}">{{ u.status }}</span>
+          <span class="text-slate-500">{{ u.school }}</span>
+          <span class="text-slate-400">Joined {{ u.joined }}</span>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <!-- New User Modal -->
+  <div id="newUserModal" class="fixed inset-0 z-50 hidden" aria-hidden="true">
+    <div class="absolute inset-0 bg-slate-900/40"></div>
+    <div class="relative mx-auto mt-20 w-full max-w-lg">
+      <div class="bg-white rounded-xl shadow-xl border border-slate-200">
+        <div class="flex items-center justify-between px-4 py-3 border-b border-slate-200">
+          <h3 class="text-sm font-semibold text-slate-900">New User</h3>
+          <button id="newUserClose" class="inline-flex items-center justify-center w-8 h-8 rounded hover:bg-slate-100" title="Close">
+            <svg class="w-4 h-4 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+          </button>
+        </div>
+        <form class="px-4 py-4">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <label class="text-sm">
+              <span class="text-slate-700">Full name</span>
+              <input type="text" class="mt-1 w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Ex. Jane Doe" />
+            </label>
+            <label class="text-sm">
+              <span class="text-slate-700">Email</span>
+              <input type="email" class="mt-1 w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="name@school.edu" />
+            </label>
+            <label class="text-sm">
+              <span class="text-slate-700">Role</span>
+              <select class="mt-1 w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                <option>Super Admin</option>
+                <option selected>School Admin</option>
+                <option>Instructor</option>
+              </select>
+            </label>
+            <label class="text-sm">
+              <span class="text-slate-700">Status</span>
+              <select class="mt-1 w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                <option selected>Active</option>
+                <option>Invited</option>
+                <option>Suspended</option>
+              </select>
+            </label>
+            <label class="text-sm sm:col-span-2">
+              <span class="text-slate-700">School</span>
+              <input type="text" class="mt-1 w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Optional" />
+            </label>
+          </div>
+          <div class="mt-5 flex items-center justify-end gap-2">
+            <button type="button" id="newUserCancel" class="px-3 py-2 rounded-lg border border-slate-200 text-slate-700 hover:bg-slate-50">Cancel</button>
+            <button type="submit" class="px-3 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700">Create</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  (function(){
+    // Modal behavior
+    const modal = document.getElementById('newUserModal');
+    const openBtn = document.getElementById('btnNewUser');
+    const closeBtn = document.getElementById('newUserClose');
+    const cancelBtn = document.getElementById('newUserCancel');
+    function open(){ if(modal) modal.classList.remove('hidden'); }
+    function close(){ if(modal) modal.classList.add('hidden'); }
+    if(openBtn) openBtn.addEventListener('click', open);
+    if(closeBtn) closeBtn.addEventListener('click', close);
+    if(cancelBtn) cancelBtn.addEventListener('click', close);
+    if(modal) modal.addEventListener('click', (e)=>{ if(e.target===modal) close(); });
+
+    // Action menu toggles
+    const menus = document.querySelectorAll('.user-card .menu');
+    const btns = document.querySelectorAll('.user-card .menu-btn');
+    function closeAll(){ menus.forEach(m=>m.classList.add('hidden')); }
+    btns.forEach((btn)=>{
+      btn.addEventListener('click', (e)=>{
+        e.stopPropagation();
+        const menu = btn.parentElement?.querySelector('.menu');
+        if(menu){
+          const isHidden = menu.classList.contains('hidden');
+          closeAll();
+          if(isHidden) menu.classList.remove('hidden');
+        }
+      });
+    });
+    document.addEventListener('click', closeAll);
+    document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeAll(); });
+
+    // Filters
+    const search = document.getElementById('userSearch');
+    const roleSel = document.getElementById('roleFilter');
+    const statusSel = document.getElementById('statusFilter');
+    const cards = Array.from(document.querySelectorAll('.user-card'));
+    function norm(s){ return (s||'').toString().toLowerCase(); }
+    function apply(){
+      const q = norm(search && search.value);
+      const role = norm(roleSel && roleSel.value);
+      const status = norm(statusSel && statusSel.value);
+      cards.forEach(card=>{
+        const qdata = norm(card.getAttribute('data-q'));
+        const cRole = norm(card.getAttribute('data-role'));
+        const cStatus = norm(card.getAttribute('data-status'));
+        const matchQ = !q || qdata.includes(q);
+        const matchR = !role || cRole===role;
+        const matchS = !status || cStatus===status;
+        card.style.display = (matchQ && matchR && matchS) ? '' : 'none';
+      });
+    }
+    [search, roleSel, statusSel].forEach(el => { if(el) el.addEventListener('input', apply); });
+  })();
+</script>
+{% endblock %}

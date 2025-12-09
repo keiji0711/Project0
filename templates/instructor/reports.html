@@ -1,0 +1,380 @@
+{% extends "instructor/base_instructor.html" %}
+
+{% block page_title %}Reports & Analytics{% endblock %}
+
+{% block instructor_content %}
+<div class="max-w-7xl mx-auto">
+    <!-- Header -->
+    <div class="mb-8">
+        <h1 class="text-3xl font-bold text-slate-800">Reports & Analytics</h1>
+        <p class="text-slate-600 mt-2">Comprehensive attendance insights and performance metrics</p>
+    </div>
+
+    <!-- Date Range Filter -->
+    <div class="bg-white rounded-xl shadow-sm p-6 mb-6">
+        <div class="flex flex-wrap items-center gap-4">
+            <div>
+                <label class="block text-sm font-medium text-slate-700 mb-2">Report Period</label>
+                <select class="px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                    <option>This Week</option>
+                    <option>This Month</option>
+                    <option selected>This Semester</option>
+                    <option>This Year</option>
+                    <option>Custom Range</option>
+                </select>
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-slate-700 mb-2">Class Filter</label>
+                <select class="px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                    <option selected>All Classes</option>
+                    <option>Mathematics - Grade 10-A</option>
+                    <option>Mathematics - Grade 10-B</option>
+                    <option>Science - Grade 11-A</option>
+                    <option>English - Grade 10-C</option>
+                </select>
+            </div>
+            <div class="ml-auto flex gap-2">
+                <button class="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition flex items-center gap-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                    </svg>
+                    Export PDF
+                </button>
+                <button class="px-4 py-2 border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-50 transition flex items-center gap-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                    </svg>
+                    Export Excel
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Overall Statistics -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <!-- Total Classes -->
+        <div class="bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl shadow-lg p-6 text-white">
+            <div class="flex items-center justify-between mb-3">
+                <div class="w-12 h-12 bg-white bg-opacity-30 rounded-lg flex items-center justify-center">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.838l-7-3zM3.31 9.397L5 10.12v4.102a8.969 8.969 0 00-1.05-.174 1 1 0 01-.89-.89 11.115 11.115 0 01.25-3.762zM9.3 16.573A9.026 9.026 0 007 14.935v-3.957l1.818.78a3 3 0 002.364 0l5.508-2.361a11.026 11.026 0 01.25 3.762 1 1 0 01-.89.89 8.968 8.968 0 00-5.35 2.524 1 1 0 01-1.4 0zM6 18a1 1 0 001-1v-2.065a8.935 8.935 0 00-2-.712V17a1 1 0 001 1z"/>
+                    </svg>
+                </div>
+                <span class="text-3xl font-bold">{{ overall_stats.total_classes }}</span>
+            </div>
+            <p class="text-purple-100 text-sm">Total Classes</p>
+            <p class="text-xs text-purple-200 mt-1">Active sections teaching</p>
+        </div>
+
+        <!-- Total Students -->
+        <div class="bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl shadow-lg p-6 text-white">
+            <div class="flex items-center justify-between mb-3">
+                <div class="w-12 h-12 bg-white bg-opacity-30 rounded-lg flex items-center justify-center">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"/>
+                    </svg>
+                </div>
+                <span class="text-3xl font-bold">{{ overall_stats.total_students }}</span>
+            </div>
+            <p class="text-blue-100 text-sm">Total Students</p>
+            <p class="text-xs text-blue-200 mt-1">Across all sections</p>
+        </div>
+
+        <!-- Average Attendance Rate -->
+        <div class="bg-gradient-to-br from-green-500 to-green-600 rounded-xl shadow-lg p-6 text-white">
+            <div class="flex items-center justify-between mb-3">
+                <div class="w-12 h-12 bg-white bg-opacity-30 rounded-lg flex items-center justify-center">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                    </svg>
+                </div>
+                <span class="text-3xl font-bold">{{ overall_stats.avg_attendance_rate }}%</span>
+            </div>
+            <p class="text-green-100 text-sm">Avg. Attendance Rate</p>
+            <p class="text-xs text-green-200 mt-1">Overall performance</p>
+        </div>
+
+        <!-- Total Sessions -->
+        <div class="bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl shadow-lg p-6 text-white">
+            <div class="flex items-center justify-between mb-3">
+                <div class="w-12 h-12 bg-white bg-opacity-30 rounded-lg flex items-center justify-center">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"/>
+                    </svg>
+                </div>
+                <span class="text-3xl font-bold">{{ overall_stats.total_sessions }}</span>
+            </div>
+            <p class="text-orange-100 text-sm">Total Sessions</p>
+            <p class="text-xs text-orange-200 mt-1">Classes conducted</p>
+        </div>
+    </div>
+
+    <!-- Attendance Summary Stats -->
+    <div class="bg-white rounded-xl shadow-sm p-6 mb-8">
+        <h2 class="text-xl font-bold text-slate-800 mb-6">Attendance Summary</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="border-l-4 border-green-500 bg-green-50 p-4 rounded-r-lg">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm text-green-700 font-medium mb-1">Total Present</p>
+                        <p class="text-3xl font-bold text-green-600">{{ overall_stats.present_total }}</p>
+                    </div>
+                    <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center">
+                        <svg class="w-8 h-8 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+            <div class="border-l-4 border-red-500 bg-red-50 p-4 rounded-r-lg">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm text-red-700 font-medium mb-1">Total Absent</p>
+                        <p class="text-3xl font-bold text-red-600">{{ overall_stats.absent_total }}</p>
+                    </div>
+                    <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center">
+                        <svg class="w-8 h-8 text-red-600" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+            <div class="border-l-4 border-orange-500 bg-orange-50 p-4 rounded-r-lg">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm text-orange-700 font-medium mb-1">Total Late</p>
+                        <p class="text-3xl font-bold text-orange-600">{{ overall_stats.late_total }}</p>
+                    </div>
+                    <div class="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center">
+                        <svg class="w-8 h-8 text-orange-600" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+        <!-- Class Performance -->
+        <div class="bg-white rounded-xl shadow-sm p-6">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-xl font-bold text-slate-800">Class Performance</h2>
+                <span class="text-sm text-slate-500">Sorted by attendance rate</span>
+            </div>
+            <div class="space-y-4">
+                {% for class in class_performance %}
+                <div class="border border-slate-200 rounded-lg p-4 hover:shadow-md transition">
+                    <div class="flex items-center justify-between mb-3">
+                        <div>
+                            <h3 class="font-semibold text-slate-800">{{ class.subject }}</h3>
+                            <p class="text-sm text-slate-600">{{ class.section }} • {{ class.students }} students</p>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-2xl font-bold {% if class.attendance_rate >= 95 %}text-green-600{% elif class.attendance_rate >= 90 %}text-blue-600{% elif class.attendance_rate >= 85 %}text-orange-600{% else %}text-red-600{% endif %}">
+                                {{ class.attendance_rate }}%
+                            </p>
+                            {% if class.trend == 'up' %}
+                            <span class="inline-flex items-center text-xs text-green-600">
+                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M12 7a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0V8.414l-4.293 4.293a1 1 0 01-1.414 0L8 10.414l-4.293 4.293a1 1 0 01-1.414-1.414l5-5a1 1 0 011.414 0L11 10.586 14.586 7H12z" clip-rule="evenodd"/>
+                                </svg>
+                                Trending up
+                            </span>
+                            {% elif class.trend == 'down' %}
+                            <span class="inline-flex items-center text-xs text-red-600">
+                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M12 13a1 1 0 100 2h5a1 1 0 001-1V9a1 1 0 10-2 0v2.586l-4.293-4.293a1 1 0 00-1.414 0L8 9.586 3.707 5.293a1 1 0 00-1.414 1.414l5 5a1 1 0 001.414 0L11 9.414 14.586 13H12z" clip-rule="evenodd"/>
+                                </svg>
+                                Trending down
+                            </span>
+                            {% else %}
+                            <span class="inline-flex items-center text-xs text-slate-600">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14"/>
+                                </svg>
+                                Stable
+                            </span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-3 gap-4 text-center border-t border-slate-100 pt-3">
+                        <div>
+                            <p class="text-xs text-slate-500 mb-1">Present</p>
+                            <p class="font-semibold text-green-600">{{ class.present }}</p>
+                        </div>
+                        <div>
+                            <p class="text-xs text-slate-500 mb-1">Absent</p>
+                            <p class="font-semibold text-red-600">{{ class.absent }}</p>
+                        </div>
+                        <div>
+                            <p class="text-xs text-slate-500 mb-1">Late</p>
+                            <p class="font-semibold text-orange-600">{{ class.late }}</p>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Monthly Trend -->
+        <div class="bg-white rounded-xl shadow-sm p-6">
+            <h2 class="text-xl font-bold text-slate-800 mb-6">Monthly Attendance Trend</h2>
+            <div class="space-y-4">
+                {% for month in monthly_trend %}
+                <div class="border border-slate-200 rounded-lg p-4">
+                    <div class="flex items-center justify-between mb-3">
+                        <h3 class="font-semibold text-slate-800">{{ month.month }} 2025</h3>
+                        <span class="text-xl font-bold {% if month.rate >= 93 %}text-green-600{% elif month.rate >= 90 %}text-blue-600{% else %}text-orange-600{% endif %}">
+                            {{ month.rate }}%
+                        </span>
+                    </div>
+                    <!-- Progress bar -->
+                    <div class="w-full bg-slate-200 rounded-full h-2.5 mb-3">
+                        <div class="{% if month.rate >= 93 %}bg-green-600{% elif month.rate >= 90 %}bg-blue-600{% else %}bg-orange-600{% endif %} h-2.5 rounded-full transition-all duration-500" style="width: {{ month.rate }}%"></div>
+                    </div>
+                    <div class="grid grid-cols-3 gap-2 text-xs">
+                        <div class="bg-green-50 rounded p-2 text-center">
+                            <p class="text-green-700 font-semibold">{{ month.present }}</p>
+                            <p class="text-green-600">Present</p>
+                        </div>
+                        <div class="bg-red-50 rounded p-2 text-center">
+                            <p class="text-red-700 font-semibold">{{ month.absent }}</p>
+                            <p class="text-red-600">Absent</p>
+                        </div>
+                        <div class="bg-orange-50 rounded p-2 text-center">
+                            <p class="text-orange-700 font-semibold">{{ month.late }}</p>
+                            <p class="text-orange-600">Late</p>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Student Performance -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+        <!-- Top Performers -->
+        <div class="bg-white rounded-xl shadow-sm p-6">
+            <div class="flex items-center gap-2 mb-6">
+                <svg class="w-6 h-6 text-yellow-500" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                </svg>
+                <h2 class="text-xl font-bold text-slate-800">Top Performers</h2>
+            </div>
+            <div class="space-y-3">
+                {% for student in top_performers %}
+                <div class="flex items-center gap-4 p-3 bg-gradient-to-r from-green-50 to-white border border-green-200 rounded-lg hover:shadow-md transition">
+                    <div class="w-10 h-10 bg-green-600 text-white rounded-full flex items-center justify-center font-bold text-lg">
+                        {{ loop.index }}
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="font-semibold text-slate-800">{{ student.name }}</h3>
+                        <p class="text-xs text-slate-600">{{ student.student_id }} • {{ student.class_section }}</p>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-xl font-bold text-green-600">{{ student.rate }}%</p>
+                        <p class="text-xs text-slate-500">{{ student.present }}/{{ student.present + student.absent }} days</p>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- At-Risk Students -->
+        <div class="bg-white rounded-xl shadow-sm p-6">
+            <div class="flex items-center gap-2 mb-6">
+                <svg class="w-6 h-6 text-red-500" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+                </svg>
+                <h2 class="text-xl font-bold text-slate-800">At-Risk Students</h2>
+            </div>
+            <div class="space-y-3">
+                {% for student in at_risk_students %}
+                <div class="flex items-center gap-4 p-3 bg-gradient-to-r from-red-50 to-white border border-red-200 rounded-lg hover:shadow-md transition">
+                    <div class="w-10 h-10 bg-red-600 text-white rounded-full flex items-center justify-center">
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+                        </svg>
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="font-semibold text-slate-800">{{ student.name }}</h3>
+                        <p class="text-xs text-slate-600">{{ student.student_id }} • {{ student.class_section }}</p>
+                        <span class="inline-block mt-1 px-2 py-0.5 bg-red-100 text-red-700 text-xs rounded-full">
+                            {{ student.consecutive_absent }} consecutive absences
+                        </span>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-xl font-bold text-red-600">{{ student.rate }}%</p>
+                        <p class="text-xs text-slate-500">{{ student.absent }} absences</p>
+                        <button class="mt-2 px-3 py-1 bg-purple-600 text-white text-xs rounded-lg hover:bg-purple-700 transition">
+                            Contact
+                        </button>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Day of Week Analysis -->
+    <div class="bg-white rounded-xl shadow-sm p-6 mb-8">
+        <h2 class="text-xl font-bold text-slate-800 mb-6">Day of Week Analysis</h2>
+        <div class="space-y-4">
+            {% for day in day_analysis %}
+            <div class="border border-slate-200 rounded-lg p-4">
+                <div class="flex items-center justify-between mb-2">
+                    <div class="flex items-center gap-4">
+                        <h3 class="font-semibold text-slate-800 w-24">{{ day.day }}</h3>
+                        <span class="text-sm text-slate-600">{{ day.classes }} classes</span>
+                    </div>
+                    <span class="text-lg font-bold {% if day.avg_rate >= 93 %}text-green-600{% elif day.avg_rate >= 90 %}text-blue-600{% else %}text-orange-600{% endif %}">
+                        {{ day.avg_rate }}%
+                    </span>
+                </div>
+                <div class="w-full bg-slate-200 rounded-full h-3 mb-2">
+                    <div class="{% if day.avg_rate >= 93 %}bg-green-600{% elif day.avg_rate >= 90 %}bg-blue-600{% else %}bg-orange-600{% endif %} h-3 rounded-full transition-all duration-500" style="width: {{ day.avg_rate }}%"></div>
+                </div>
+                <div class="flex gap-4 text-sm">
+                    <span class="text-green-600">✓ {{ day.avg_present }} present</span>
+                    <span class="text-red-600">✗ {{ day.avg_absent }} absent</span>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Insights & Recommendations -->
+    <div class="bg-gradient-to-br from-purple-50 to-blue-50 rounded-xl border-2 border-purple-200 p-6">
+        <div class="flex items-start gap-3">
+            <div class="w-10 h-10 bg-purple-600 text-white rounded-lg flex items-center justify-center flex-shrink-0">
+                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
+                </svg>
+            </div>
+            <div class="flex-1">
+                <h2 class="text-xl font-bold text-slate-800 mb-4">AI-Powered Insights & Recommendations</h2>
+                <div class="space-y-3">
+                    <div class="bg-white rounded-lg p-4 border-l-4 border-green-500">
+                        <p class="font-semibold text-green-700 mb-1">✓ Excellent Overall Performance</p>
+                        <p class="text-sm text-slate-600">Your average attendance rate of 92.3% exceeds the school target of 90%. Keep up the great work!</p>
+                    </div>
+                    <div class="bg-white rounded-lg p-4 border-l-4 border-orange-500">
+                        <p class="font-semibold text-orange-700 mb-1">⚠ Friday Attendance Concern</p>
+                        <p class="text-sm text-slate-600">Friday shows the lowest attendance rate (89.5%). Consider engaging activities or review sessions to boost Friday participation.</p>
+                    </div>
+                    <div class="bg-white rounded-lg p-4 border-l-4 border-red-500">
+                        <p class="font-semibold text-red-700 mb-1">🔴 Immediate Action Required</p>
+                        <p class="text-sm text-slate-600">4 students have consecutive absences (2-3 days). Recommend contacting parents and scheduling intervention meetings.</p>
+                    </div>
+                    <div class="bg-white rounded-lg p-4 border-l-4 border-blue-500">
+                        <p class="font-semibold text-blue-700 mb-1">📊 Trending Up</p>
+                        <p class="text-sm text-slate-600">December shows a 2.1% improvement compared to November. Your engagement strategies are working!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

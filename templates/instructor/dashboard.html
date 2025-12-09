@@ -1,43 +1,167 @@
 <!-- File: instructor/dashboard.html
-     Purpose: Instructor dashboard. Extends `base.html`. Contains sidebar and "Today's Classes" list with
-     visual-only Open Attendance buttons.
+     Purpose: Instructor dashboard with overview stats, today's classes, and quick actions.
 -->
-{% extends 'base.html' %}
-{% block title %}Instructor — Dashboard{% endblock %}
+{% extends 'instructor/base_instructor.html' %}
+{% block page_title %}Dashboard{% endblock %}
 
-{% block content %}
-  <div class="lg:flex lg:space-x-6">
-    <aside class="mb-6 lg:mb-0 lg:w-64 bg-white rounded-lg p-4 shadow-sm">
-      <h3 class="font-semibold text-lg" style="color:var(--color-secondary)">Instructor</h3>
-      <nav class="mt-4 space-y-2" aria-label="Instructor navigation">
-        <a href="#" class="block py-2 px-3 rounded-md hover:bg-[color:var(--color-bg)]">Today's Classes</a>
-        <a href="#" class="block py-2 px-3 rounded-md hover:bg-[color:var(--color-bg)]">Attendance</a>
-        <a href="#" class="block py-2 px-3 rounded-md hover:bg-[color:var(--color-bg)]">Schedule</a>
-      </nav>
-    </aside>
+{% block instructor_content %}
+    <!-- Page Header -->
+    <div class="mb-8">
+      <h1 class="text-2xl font-bold text-slate-900">Welcome Back, {{ current_user.name if current_user and current_user.name else 'Instructor' }}!</h1>
+      <p class="text-slate-600 mt-1">Here's your teaching schedule and class overview for today.</p>
+    </div>
 
-    <div class="flex-1">
-      <div class="mb-4">
-        <h2 class="text-xl font-semibold" style="color:var(--color-secondary)">Today's Classes</h2>
-        <p class="text-sm text-slate-600">{{ current_date if current_date is defined else 'Today' }}</p>
+    <!-- Stats Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
+      <div class="bg-white rounded-xl p-6 shadow-md border border-slate-200">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-sm font-medium text-slate-600">Today's Classes</p>
+            <p class="text-3xl font-bold text-slate-900 mt-2">{{ stats.todays_classes if stats else 5 }}</p>
+            <p class="text-sm text-slate-500 mt-2">Scheduled sessions</p>
+          </div>
+          <div class="h-12 w-12 rounded-lg bg-gradient-to-br from-purple-500 to-purple-600 flex items-center justify-center">
+            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          </div>
+        </div>
       </div>
 
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        {% for cl in todays_classes if todays_classes is defined else range(1,4) %}
-        <article class="bg-white rounded-lg p-4 shadow-sm">
-          <div class="flex items-start justify-between">
-            <div>
-              <h3 class="font-semibold">{{ cl.name if todays_classes is defined else 'Mathematics' }}</h3>
-              <p class="text-sm text-slate-600">{{ cl.time if todays_classes is defined else '08:00 — 09:00' }}</p>
-              <p class="mt-2 text-sm text-slate-500">{{ cl.section if todays_classes is defined else 'Section A' }}</p>
-            </div>
-            <div class="ml-4 flex items-center">
-              <a href="#" class="inline-flex items-center px-3 py-2 rounded-md text-white font-medium" style="background-color:var(--color-primary)">Open Attendance</a>
-            </div>
+      <div class="bg-white rounded-xl p-6 shadow-md border border-slate-200">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-sm font-medium text-slate-600">Total Students</p>
+            <p class="text-3xl font-bold text-slate-900 mt-2">{{ stats.total_students if stats else 128 }}</p>
+            <p class="text-sm text-slate-500 mt-2">Across all classes</p>
           </div>
-        </article>
-        {% endfor %}
+          <div class="h-12 w-12 rounded-lg bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center">
+            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-xl p-6 shadow-md border border-slate-200">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-sm font-medium text-slate-600">Attendance Rate</p>
+            <p class="text-3xl font-bold text-slate-900 mt-2">{{ stats.attendance_rate if stats else '92%' }}</p>
+            <p class="text-sm text-green-600 mt-2">
+              <span class="font-medium">↗ 3%</span> vs last week
+            </p>
+          </div>
+          <div class="h-12 w-12 rounded-lg bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center">
+            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-xl p-6 shadow-md border border-slate-200">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-sm font-medium text-slate-600">Classes This Week</p>
+            <p class="text-3xl font-bold text-slate-900 mt-2">{{ stats.weekly_classes if stats else 18 }}</p>
+            <p class="text-sm text-slate-500 mt-2">Total sessions</p>
+          </div>
+          <div class="h-12 w-12 rounded-lg bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center">
+            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
+
+    <!-- Today's Schedule -->
+    <div class="mb-8">
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="text-xl font-bold text-slate-900">Today's Schedule</h2>
+        <a href="{{ url_for('instructor.schedule') }}" class="text-sm text-purple-600 hover:text-purple-700 font-medium">View Full Schedule →</a>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        {% if todays_classes %}
+        {% for class in todays_classes %}
+        <div class="bg-white rounded-xl p-5 shadow-md border border-slate-200 hover:shadow-lg transition-shadow">
+          <div class="flex items-start justify-between mb-3">
+            <div class="flex-1">
+              <h3 class="font-bold text-lg text-slate-900">{{ class.subject }}</h3>
+              <p class="text-sm text-slate-600">{{ class.section }}</p>
+            </div>
+            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold {% if class.status == 'upcoming' %}bg-blue-100 text-blue-700{% elif class.status == 'ongoing' %}bg-green-100 text-green-700{% else %}bg-slate-100 text-slate-700{% endif %}">
+              {{ class.status|capitalize }}
+            </span>
+          </div>
+
+          <div class="flex items-center gap-4 text-sm text-slate-600 mb-4">
+            <div class="flex items-center gap-1">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+              <span>{{ class.time }}</span>
+            </div>
+            <div class="flex items-center gap-1">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+              <span>{{ class.students }} students</span>
+            </div>
+            <div class="flex items-center gap-1">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+              <span>{{ class.room }}</span>
+            </div>
+          </div>
+
+          <div class="flex gap-2">
+            <a href="{{ url_for('attendance.record') }}" class="flex-1 inline-flex items-center justify-center px-4 py-2 rounded-lg bg-purple-600 text-white font-medium hover:bg-purple-700 transition-colors">
+              <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+              Mark Attendance
+            </a>
+            <a href="#" class="inline-flex items-center justify-center px-4 py-2 rounded-lg border border-slate-300 text-slate-700 font-medium hover:bg-slate-50 transition-colors">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+            </a>
+          </div>
+        </div>
+        {% endfor %}
+        {% else %}
+        <!-- Placeholder if no classes -->
+        <div class="col-span-2 bg-slate-50 rounded-xl p-8 text-center border border-slate-200">
+          <svg class="w-12 h-12 mx-auto text-slate-400 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+          <p class="text-slate-600 font-medium">No classes scheduled for today</p>
+          <p class="text-sm text-slate-500 mt-1">Enjoy your day off!</p>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <a href="{{ url_for('instructor.classes') }}" class="bg-white rounded-xl p-6 shadow-md border border-slate-200 hover:shadow-lg transition-shadow group">
+        <div class="flex items-center gap-4">
+          <div class="h-12 w-12 rounded-lg bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center group-hover:scale-110 transition-transform">
+            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+          </div>
+          <div>
+            <h3 class="font-semibold text-slate-900 group-hover:text-purple-600 transition-colors">My Classes</h3>
+            <p class="text-sm text-slate-600">View all assigned classes</p>
+          </div>
+        </div>
+      </a>
+
+      <a href="{{ url_for('instructor.attendance') }}" class="bg-white rounded-xl p-6 shadow-md border border-slate-200 hover:shadow-lg transition-shadow group">
+        <div class="flex items-center gap-4">
+          <div class="h-12 w-12 rounded-lg bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center group-hover:scale-110 transition-transform">
+            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          </div>
+          <div>
+            <h3 class="font-semibold text-slate-900 group-hover:text-purple-600 transition-colors">Attendance Records</h3>
+            <p class="text-sm text-slate-600">View & manage attendance</p>
+          </div>
+        </div>
+      </a>
+
+      <a href="{{ url_for('instructor.schedule') }}" class="bg-white rounded-xl p-6 shadow-md border border-slate-200 hover:shadow-lg transition-shadow group">
+        <div class="flex items-center gap-4">
+          <div class="h-12 w-12 rounded-lg bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center group-hover:scale-110 transition-transform">
+            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+          </div>
+          <div>
+            <h3 class="font-semibold text-slate-900 group-hover:text-purple-600 transition-colors">Weekly Schedule</h3>
+            <p class="text-sm text-slate-600">View full week calendar</p>
+          </div>
+        </div>
+      </a>
+    </div>
 {% endblock %}

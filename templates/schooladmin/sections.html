@@ -12,7 +12,7 @@
             <h1 class="text-2xl font-bold text-slate-900">Manage Sections</h1>
             <p class="text-slate-600 mt-1">Create and organize class sections</p>
           </div>
-          <button class="px-4 py-2.5 bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold rounded-lg shadow-sm hover:shadow-md transition-all flex items-center gap-2">
+          <button id="add-section-btn" class="px-4 py-2.5 bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold rounded-lg shadow-sm hover:shadow-md transition-all flex items-center gap-2">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
             Add Section
           </button>
@@ -20,11 +20,11 @@
 
         <!-- Search & Filter -->
         <div class="px-6 py-4 bg-slate-50 border-b border-slate-200">
-          <div class="flex flex-wrap gap-3">
+          <div class="flex flex-wrap gap-3 items-center">
             <div class="flex-1 min-w-[200px]">
-              <input type="text" placeholder="Search sections..." class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+              <input id="section-search" type="text" placeholder="Search sections..." class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
             </div>
-            <select class="px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+            <select id="grade-filter" class="px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
               <option>All Grade Levels</option>
               <option>Grade 7</option>
               <option>Grade 8</option>
@@ -33,167 +33,421 @@
               <option>Grade 11</option>
               <option>Grade 12</option>
             </select>
+            <div class="ml-auto text-xs text-slate-600" id="section-count">&nbsp;</div>
           </div>
         </div>
 
-        <!-- Sections Table -->
-        <div class="overflow-x-auto">
-          <table class="w-full">
-            <thead class="bg-slate-50 border-b border-slate-200">
-              <tr>
-                <th class="px-6 py-3 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">Section Name</th>
-                <th class="px-6 py-3 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">Grade Level</th>
-                <th class="px-6 py-3 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">Adviser</th>
-                <th class="px-6 py-3 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">Students</th>
-                <th class="px-6 py-3 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">Room</th>
-                <th class="px-6 py-3 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">Status</th>
-                <th class="px-6 py-3 text-right text-xs font-semibold text-slate-600 uppercase tracking-wider">Actions</th>
-              </tr>
-            </thead>
-            <tbody class="divide-y divide-slate-200">
-              <tr class="hover:bg-slate-50 transition-colors">
-                <td class="px-6 py-4 whitespace-nowrap">
-                  <span class="font-medium text-slate-900">Section A</span>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap">
-                  <span class="text-sm text-slate-600">Grade 10</span>
-                </td>
-                <td class="px-6 py-4">
-                  <span class="text-sm text-slate-600">Dr. Maria Johnson</span>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap">
-                  <span class="text-sm font-medium text-slate-900">35/40</span>
-                  <span class="text-xs text-slate-500 ml-1">students</span>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap">
-                  <span class="text-sm text-slate-600">Room 101</span>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap">
-                  <span class="px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">Active</span>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap text-right">
-                  <button class="text-blue-600 hover:text-blue-800 font-medium text-sm mr-3">Edit</button>
-                  <button class="text-red-600 hover:text-red-800 font-medium text-sm">Remove</button>
-                </td>
-              </tr>
-              <tr class="hover:bg-slate-50 transition-colors">
-                <td class="px-6 py-4 whitespace-nowrap">
-                  <span class="font-medium text-slate-900">Section B</span>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap">
-                  <span class="text-sm text-slate-600">Grade 10</span>
-                </td>
-                <td class="px-6 py-4">
-                  <span class="text-sm text-slate-600">Robert Chen</span>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap">
-                  <span class="text-sm font-medium text-slate-900">38/40</span>
-                  <span class="text-xs text-slate-500 ml-1">students</span>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap">
-                  <span class="text-sm text-slate-600">Room 102</span>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap">
-                  <span class="px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">Active</span>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap text-right">
-                  <button class="text-blue-600 hover:text-blue-800 font-medium text-sm mr-3">Edit</button>
-                  <button class="text-red-600 hover:text-red-800 font-medium text-sm">Remove</button>
-                </td>
-              </tr>
-              <tr class="hover:bg-slate-50 transition-colors">
-                <td class="px-6 py-4 whitespace-nowrap">
-                  <span class="font-medium text-slate-900">Section A</span>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap">
-                  <span class="text-sm text-slate-600">Grade 11</span>
-                </td>
-                <td class="px-6 py-4">
-                  <span class="text-sm text-slate-600">Sarah Anderson</span>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap">
-                  <span class="text-sm font-medium text-slate-900">32/35</span>
-                  <span class="text-xs text-slate-500 ml-1">students</span>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap">
-                  <span class="text-sm text-slate-600">Room 201</span>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap">
-                  <span class="px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">Active</span>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap text-right">
-                  <button class="text-blue-600 hover:text-blue-800 font-medium text-sm mr-3">Edit</button>
-                  <button class="text-red-600 hover:text-red-800 font-medium text-sm">Remove</button>
-                </td>
-              </tr>
-              <tr class="hover:bg-slate-50 transition-colors">
-                <td class="px-6 py-4 whitespace-nowrap">
-                  <span class="font-medium text-slate-900">Section B</span>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap">
-                  <span class="text-sm text-slate-600">Grade 11</span>
-                </td>
-                <td class="px-6 py-4">
-                  <span class="text-sm text-slate-600">Prof. David Lee</span>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap">
-                  <span class="text-sm font-medium text-slate-900">30/35</span>
-                  <span class="text-xs text-slate-500 ml-1">students</span>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap">
-                  <span class="text-sm text-slate-600">Room 202</span>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap">
-                  <span class="px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">Active</span>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap text-right">
-                  <button class="text-blue-600 hover:text-blue-800 font-medium text-sm mr-3">Edit</button>
-                  <button class="text-red-600 hover:text-red-800 font-medium text-sm">Remove</button>
-                </td>
-              </tr>
-              <tr class="hover:bg-slate-50 transition-colors">
-                <td class="px-6 py-4 whitespace-nowrap">
-                  <span class="font-medium text-slate-900">Section A</span>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap">
-                  <span class="text-sm text-slate-600">Grade 12</span>
-                </td>
-                <td class="px-6 py-4">
-                  <span class="text-sm text-slate-600">Emily Carter</span>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap">
-                  <span class="text-sm font-medium text-slate-900">28/30</span>
-                  <span class="text-xs text-slate-500 ml-1">students</span>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap">
-                  <span class="text-sm text-slate-600">Room 301</span>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap">
-                  <span class="px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">Active</span>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap text-right">
-                  <button class="text-blue-600 hover:text-blue-800 font-medium text-sm mr-3">Edit</button>
-                  <button class="text-red-600 hover:text-red-800 font-medium text-sm">Remove</button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+        <!-- Sections Grid (Cards) -->
+        <div class="px-6 py-6">
+          <div id="sections-grid" class="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+            <!-- Example card -->
+            <div class="section-card rounded-xl border border-slate-200 bg-white shadow-sm hover:shadow-md transition p-4" data-name="Section A" data-grade="Grade 10" data-adviser="Dr. Maria Johnson" data-room="Room 101" data-status="Active" data-students="35" data-capacity="40">
+              <div class="flex items-start justify-between">
+                <div>
+                  <div class="text-sm text-slate-500">Grade 10</div>
+                  <h3 class="text-lg font-semibold text-slate-900">Section A</h3>
+                </div>
+                <span class="px-2 py-1 rounded-full text-[10px] font-semibold bg-green-100 text-green-700">Active</span>
+              </div>
+              <div class="mt-3 grid grid-cols-2 gap-3 text-sm">
+                <div>
+                  <div class="text-slate-500 flex items-center gap-1">
+                    <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A4 4 0 018 17h8a4 4 0 012.879 1.196M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                    Adviser
+                  </div>
+                  <div class="font-medium text-slate-900">Dr. Maria Johnson</div>
+                </div>
+                <div>
+                  <div class="text-slate-500 flex items-center gap-1">
+                    <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5V4H2v16h5M7 20V10m10 10V10M7 10l5-6 5 6"/></svg>
+                    Students
+                  </div>
+                  <div class="font-medium text-slate-900">35/40</div>
+                  <div class="mt-1 h-1.5 bg-slate-100 rounded">
+                    <div class="h-1.5 bg-blue-500 rounded" style="width: calc(35/40 * 100%)"></div>
+                  </div>
+                </div>
+                <div>
+                  <div class="text-slate-500 flex items-center gap-1">
+                    <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7l9-4 9 4-9 4-9-4zm0 0v10l9 4 9-4V7"/></svg>
+                    Room
+                  </div>
+                  <div class="font-medium text-slate-900">Room 101</div>
+                </div>
+              </div>
+              <div class="mt-4 flex items-center justify-end gap-2">
+                <button class="edit-section inline-flex items-center gap-1 px-3 py-1.5 text-xs rounded-lg border border-slate-300 text-slate-700 hover:bg-slate-50" title="Edit section">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536M4 20h4l10.5-10.5a2.121 2.121 0 10-3-3L5 17v3z"/></svg>
+                  Edit
+                </button>
+                <button class="remove-section inline-flex items-center gap-1 px-3 py-1.5 text-xs rounded-lg bg-rose-600 text-white hover:bg-rose-700" title="Remove section">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6M9 7h6m2 0h-2m-6 0H7m2-2h6a2 2 0 012 2H7a2 2 0 012-2z"/></svg>
+                  Remove
+                </button>
+              </div>
+            </div>
 
-        <!-- Pagination -->
-        <div class="px-6 py-4 bg-slate-50 border-t border-slate-200 flex items-center justify-between">
-          <span class="text-sm text-slate-600">Showing 1 to 5 of 36 sections</span>
-          <div class="flex gap-2">
-            <button class="px-3 py-1 border border-slate-300 rounded-lg text-sm font-medium text-slate-600 hover:bg-white">Previous</button>
-            <button class="px-3 py-1 bg-blue-600 text-white rounded-lg text-sm font-medium">1</button>
-            <button class="px-3 py-1 border border-slate-300 rounded-lg text-sm font-medium text-slate-600 hover:bg-white">2</button>
-            <button class="px-3 py-1 border border-slate-300 rounded-lg text-sm font-medium text-slate-600 hover:bg-white">3</button>
-            <button class="px-3 py-1 border border-slate-300 rounded-lg text-sm font-medium text-slate-600 hover:bg-white">...</button>
-            <button class="px-3 py-1 border border-slate-300 rounded-lg text-sm font-medium text-slate-600 hover:bg-white">8</button>
-            <button class="px-3 py-1 border border-slate-300 rounded-lg text-sm font-medium text-slate-600 hover:bg-white">Next</button>
+            <div class="section-card rounded-xl border border-slate-200 bg-white shadow-sm hover:shadow-md transition p-4" data-name="Section B" data-grade="Grade 10" data-adviser="Robert Chen" data-room="Room 102" data-status="Active" data-students="38" data-capacity="40">
+              <div class="flex items-start justify-between">
+                <div>
+                  <div class="text-sm text-slate-500">Grade 10</div>
+                  <h3 class="text-lg font-semibold text-slate-900">Section B</h3>
+                </div>
+                <span class="px-2 py-1 rounded-full text-[10px] font-semibold bg-green-100 text-green-700">Active</span>
+              </div>
+              <div class="mt-3 grid grid-cols-2 gap-3 text-sm">
+                <div>
+                  <div class="text-slate-500 flex items-center gap-1">
+                    <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A4 4 0 018 17h8a4 4 0 012.879 1.196M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                    Adviser
+                  </div>
+                  <div class="font-medium text-slate-900">Robert Chen</div>
+                </div>
+                <div>
+                  <div class="text-slate-500 flex items-center gap-1">
+                    <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5V4H2v16h5M7 20V10m10 10V10M7 10l5-6 5 6"/></svg>
+                    Students
+                  </div>
+                  <div class="font-medium text-slate-900">38/40</div>
+                  <div class="mt-1 h-1.5 bg-slate-100 rounded"><div class="h-1.5 bg-blue-500 rounded" style="width: calc(38/40 * 100%)"></div></div>
+                </div>
+                <div>
+                  <div class="text-slate-500 flex items-center gap-1">
+                    <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7l9-4 9 4-9 4-9-4zm0 0v10l9 4 9-4V7"/></svg>
+                    Room
+                  </div>
+                  <div class="font-medium text-slate-900">Room 102</div>
+                </div>
+              </div>
+              <div class="mt-4 flex items-center justify-end gap-2">
+                <button class="edit-section inline-flex items-center gap-1 px-3 py-1.5 text-xs rounded-lg border border-slate-300 text-slate-700 hover:bg-slate-50" title="Edit section"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536M4 20h4l10.5-10.5a2.121 2.121 0 10-3-3L5 17v3z"/></svg> Edit</button>
+                <button class="remove-section inline-flex items-center gap-1 px-3 py-1.5 text-xs rounded-lg bg-rose-600 text-white hover:bg-rose-700" title="Remove section"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6M9 7h6m2 0h-2m-6 0H7m2-2h6a2 2 0 012 2H7a2 2 0 012-2z"/></svg> Remove</button>
+              </div>
+            </div>
+
+            <div class="section-card rounded-xl border border-slate-200 bg-white shadow-sm hover:shadow-md transition p-4" data-name="Section A" data-grade="Grade 11" data-adviser="Sarah Anderson" data-room="Room 201" data-status="Active" data-students="32" data-capacity="35">
+              <div class="flex items-start justify-between">
+                <div>
+                  <div class="text-sm text-slate-500">Grade 11</div>
+                  <h3 class="text-lg font-semibold text-slate-900">Section A</h3>
+                </div>
+                <span class="px-2 py-1 rounded-full text-[10px] font-semibold bg-green-100 text-green-700">Active</span>
+              </div>
+              <div class="mt-3 grid grid-cols-2 gap-3 text-sm">
+                <div>
+                  <div class="text-slate-500 flex items-center gap-1"><svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A4 4 0 018 17h8a4 4 0 012.879 1.196M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg> Adviser</div>
+                  <div class="font-medium text-slate-900">Sarah Anderson</div>
+                </div>
+                <div>
+                  <div class="text-slate-500 flex items-center gap-1"><svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5V4H2v16h5M7 20V10m10 10V10M7 10l5-6 5 6"/></svg> Students</div>
+                  <div class="font-medium text-slate-900">32/35</div>
+                  <div class="mt-1 h-1.5 bg-slate-100 rounded"><div class="h-1.5 bg-purple-500 rounded" style="width: calc(32/35 * 100%)"></div></div>
+                </div>
+                <div>
+                  <div class="text-slate-500 flex items-center gap-1"><svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7l9-4 9 4-9 4-9-4zm0 0v10l9 4 9-4V7"/></svg> Room</div>
+                  <div class="font-medium text-slate-900">Room 201</div>
+                </div>
+              </div>
+              <div class="mt-4 flex items-center justify-end gap-2">
+                <button class="edit-section inline-flex items-center gap-1 px-3 py-1.5 text-xs rounded-lg border border-slate-300 text-slate-700 hover:bg-slate-50" title="Edit section"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536M4 20h4l10.5-10.5a2.121 2.121 0 10-3-3L5 17v3z"/></svg> Edit</button>
+                <button class="remove-section inline-flex items-center gap-1 px-3 py-1.5 text-xs rounded-lg bg-rose-600 text-white hover:bg-rose-700" title="Remove section"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6M9 7h6m2 0h-2m-6 0H7m2-2h6a2 2 0 012 2H7a2 2 0 012-2z"/></svg> Remove</button>
+              </div>
+            </div>
+
+            <div class="section-card rounded-xl border border-slate-200 bg-white shadow-sm hover:shadow-md transition p-4" data-name="Section B" data-grade="Grade 11" data-adviser="Prof. David Lee" data-room="Room 202" data-status="Active" data-students="30" data-capacity="35">
+              <div class="flex items-start justify-between">
+                <div>
+                  <div class="text-sm text-slate-500">Grade 11</div>
+                  <h3 class="text-lg font-semibold text-slate-900">Section B</h3>
+                </div>
+                <span class="px-2 py-1 rounded-full text-[10px] font-semibold bg-green-100 text-green-700">Active</span>
+              </div>
+              <div class="mt-3 grid grid-cols-2 gap-3 text-sm">
+                <div>
+                  <div class="text-slate-500 flex items-center gap-1"><svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A4 4 0 018 17h8a4 4 0 012.879 1.196M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg> Adviser</div>
+                  <div class="font-medium text-slate-900">Prof. David Lee</div>
+                </div>
+                <div>
+                  <div class="text-slate-500 flex items-center gap-1"><svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5V4H2v16h5M7 20V10m10 10V10M7 10l5-6 5 6"/></svg> Students</div>
+                  <div class="font-medium text-slate-900">30/35</div>
+                  <div class="mt-1 h-1.5 bg-slate-100 rounded"><div class="h-1.5 bg-purple-500 rounded" style="width: calc(30/35 * 100%)"></div></div>
+                </div>
+                <div>
+                  <div class="text-slate-500 flex items-center gap-1"><svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7l9-4 9 4-9 4-9-4zm0 0v10l9 4 9-4V7"/></svg> Room</div>
+                  <div class="font-medium text-slate-900">Room 202</div>
+                </div>
+              </div>
+              <div class="mt-4 flex items-center justify-end gap-2">
+                <button class="edit-section inline-flex items-center gap-1 px-3 py-1.5 text-xs rounded-lg border border-slate-300 text-slate-700 hover:bg-slate-50" title="Edit section"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536M4 20h4l10.5-10.5a2.121 2.121 0 10-3-3L5 17v3z"/></svg> Edit</button>
+                <button class="remove-section inline-flex items-center gap-1 px-3 py-1.5 text-xs rounded-lg bg-rose-600 text-white hover:bg-rose-700" title="Remove section"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6M9 7h6m2 0h-2m-6 0H7m2-2h6a2 2 0 012 2H7a2 2 0 012-2z"/></svg> Remove</button>
+              </div>
+            </div>
+
+            <div class="section-card rounded-xl border border-slate-200 bg-white shadow-sm hover:shadow-md transition p-4" data-name="Section A" data-grade="Grade 12" data-adviser="Emily Carter" data-room="Room 301" data-status="Active" data-students="28" data-capacity="30">
+              <div class="flex items-start justify-between">
+                <div>
+                  <div class="text-sm text-slate-500">Grade 12</div>
+                  <h3 class="text-lg font-semibold text-slate-900">Section A</h3>
+                </div>
+                <span class="px-2 py-1 rounded-full text-[10px] font-semibold bg-green-100 text-green-700">Active</span>
+              </div>
+              <div class="mt-3 grid grid-cols-2 gap-3 text-sm">
+                <div>
+                  <div class="text-slate-500 flex items-center gap-1"><svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A4 4 0 018 17h8a4 4 0 012.879 1.196M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg> Adviser</div>
+                  <div class="font-medium text-slate-900">Emily Carter</div>
+                </div>
+                <div>
+                  <div class="text-slate-500 flex items-center gap-1"><svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5V4H2v16h5M7 20V10m10 10V10M7 10l5-6 5 6"/></svg> Students</div>
+                  <div class="font-medium text-slate-900">28/30</div>
+                  <div class="mt-1 h-1.5 bg-slate-100 rounded"><div class="h-1.5 bg-emerald-500 rounded" style="width: calc(28/30 * 100%)"></div></div>
+                </div>
+                <div>
+                  <div class="text-slate-500 flex items-center gap-1"><svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7l9-4 9 4-9 4-9-4zm0 0v10l9 4 9-4V7"/></svg> Room</div>
+                  <div class="font-medium text-slate-900">Room 301</div>
+                </div>
+              </div>
+              <div class="mt-4 flex items-center justify-end gap-2">
+                <button class="edit-section inline-flex items-center gap-1 px-3 py-1.5 text-xs rounded-lg border border-slate-300 text-slate-700 hover:bg-slate-50" title="Edit section"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536M4 20h4l10.5-10.5a2.121 2.121 0 10-3-3L5 17v3z"/></svg> Edit</button>
+                <button class="remove-section inline-flex items-center gap-1 px-3 py-1.5 text-xs rounded-lg bg-rose-600 text-white hover:bg-rose-700" title="Remove section"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6M9 7h6m2 0h-2m-6 0H7m2-2h6a2 2 0 012 2H7a2 2 0 012-2z"/></svg> Remove</button>
+              </div>
+            </div>
+          </div>
+          <!-- Empty state -->
+          <div id="sections-empty" class="hidden text-center py-16 text-slate-500">
+            <div class="mx-auto w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center mb-3">
+              <svg class="w-6 h-6 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+            </div>
+            <div class="text-sm">No sections found. Try adjusting your search or filters.</div>
+          </div>
+        </div>
+      </div>
+      <!-- Add Section Modal -->
+      <div id="section-modal" class="fixed inset-0 z-50 hidden">
+        <div id="section-backdrop" class="absolute inset-0 bg-slate-900/40"></div>
+        <div class="relative mx-auto w-full max-w-2xl mt-20 px-6">
+          <div class="bg-white rounded-xl shadow-2xl border border-slate-200 overflow-hidden">
+            <div class="px-6 py-4 border-b border-slate-200 flex items-center justify-between">
+              <div>
+                <h3 class="text-base font-semibold text-slate-900">Add Section</h3>
+                <p class="text-xs text-slate-500">Create a new class section</p>
+              </div>
+              <button id="section-close" type="button" class="p-2 text-slate-500 hover:text-slate-700">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+              </button>
+            </div>
+            <form id="section-form" class="px-6 py-5 max-h-[70vh] overflow-y-auto">
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label for="sec-name" class="block text-xs font-medium text-slate-700">Section Name<span class="text-rose-500"> *</span></label>
+                  <input id="sec-name" name="name" type="text" required placeholder="e.g., Section A" class="mt-1 w-full px-3 py-2 text-sm rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
+                </div>
+                <div>
+                  <label for="sec-grade" class="block text-xs font-medium text-slate-700">Grade Level<span class="text-rose-500"> *</span></label>
+                  <select id="sec-grade" name="grade" required class="mt-1 w-full px-3 py-2 text-sm rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    <option value="">Select grade</option>
+                    <option>Grade 7</option>
+                    <option>Grade 8</option>
+                    <option>Grade 9</option>
+                    <option>Grade 10</option>
+                    <option>Grade 11</option>
+                    <option>Grade 12</option>
+                  </select>
+                </div>
+                <div>
+                  <label for="sec-adviser" class="block text-xs font-medium text-slate-700">Adviser</label>
+                  <input id="sec-adviser" name="adviser" type="text" placeholder="e.g., Dr. Maria Johnson" class="mt-1 w-full px-3 py-2 text-sm rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
+                </div>
+                <div>
+                  <label for="sec-capacity" class="block text-xs font-medium text-slate-700">Capacity</label>
+                  <input id="sec-capacity" name="capacity" type="number" min="1" step="1" placeholder="e.g., 40" class="mt-1 w-full px-3 py-2 text-sm rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
+                </div>
+                <div>
+                  <label for="sec-room" class="block text-xs font-medium text-slate-700">Room</label>
+                  <input id="sec-room" name="room" type="text" placeholder="e.g., Room 101" class="mt-1 w-full px-3 py-2 text-sm rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
+                </div>
+                <div>
+                  <label for="sec-status" class="block text-xs font-medium text-slate-700">Status</label>
+                  <select id="sec-status" name="status" class="mt-1 w-full px-3 py-2 text-sm rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    <option>Active</option>
+                    <option>Inactive</option>
+                  </select>
+                </div>
+                <div class="sm:col-span-2">
+                  <label for="sec-notes" class="block text-xs font-medium text-slate-700">Notes</label>
+                  <textarea id="sec-notes" name="notes" rows="3" placeholder="Additional information..." class="mt-1 w-full px-3 py-2 text-sm rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"></textarea>
+                </div>
+              </div>
+              <div class="mt-6 pt-4 border-t border-slate-200 flex items-center justify-end gap-3">
+                <button type="button" id="section-cancel" class="px-3 py-2 text-xs rounded-lg border border-slate-300 text-slate-700 hover:bg-slate-50">Cancel</button>
+                <button type="submit" class="px-3 py-2 text-xs rounded-lg bg-blue-600 text-white hover:bg-blue-700">Save</button>
+              </div>
+            </form>
           </div>
         </div>
       </div>
     </div>
   </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  (function(){
+    const addBtn = document.getElementById('add-section-btn');
+    const modal = document.getElementById('section-modal');
+    const backdrop = document.getElementById('section-backdrop');
+    const closeBtn = document.getElementById('section-close');
+    const cancelBtn = document.getElementById('section-cancel');
+    const form = document.getElementById('section-form');
+    const grid = document.getElementById('sections-grid');
+    const searchInput = document.getElementById('section-search');
+    const gradeFilter = document.getElementById('grade-filter');
+    const resultCount = document.getElementById('section-count');
+    const emptyState = document.getElementById('sections-empty');
+
+    function gradeAccentClass(grade){
+      const g = (grade || '').toLowerCase();
+      if (g.includes('12')) return { border: 'border-emerald-500', bar: 'bg-emerald-500' };
+      if (g.includes('11')) return { border: 'border-purple-500', bar: 'bg-purple-500' };
+      if (g.includes('10')) return { border: 'border-blue-500', bar: 'bg-blue-500' };
+      if (g.includes('9')) return { border: 'border-indigo-500', bar: 'bg-indigo-500' };
+      if (g.includes('8')) return { border: 'border-teal-500', bar: 'bg-teal-500' };
+      if (g.includes('7')) return { border: 'border-cyan-500', bar: 'bg-cyan-500' };
+      return { border: 'border-slate-300', bar: 'bg-slate-400' };
+    }
+
+    function enhanceCard(card){
+      const grade = card.dataset.grade || '';
+      const { border } = gradeAccentClass(grade);
+      card.classList.add('border-l-4');
+      card.classList.add(border);
+      // Progress bar width if dataset provided
+      const students = parseInt(card.dataset.students || '0', 10);
+      const capacity = parseInt(card.dataset.capacity || '0', 10);
+      if (!isNaN(students) && !isNaN(capacity) && capacity > 0){
+        const pct = Math.min(100, Math.max(0, Math.round((students/capacity)*100)));
+        const bar = card.querySelector('.capacity-bar');
+        if (bar){ bar.style.width = pct + '%'; }
+      }
+    }
+
+    function openModal(){
+      modal.classList.remove('hidden');
+      document.getElementById('sec-name')?.focus();
+    }
+    function closeModal(){
+      modal.classList.add('hidden');
+      form.reset();
+    }
+
+    function cardMatches(el, q, grade){
+      const name = (el.dataset.name || '').toLowerCase();
+      const g = (el.dataset.grade || '').toLowerCase();
+      const adviser = (el.dataset.adviser || '').toLowerCase();
+      const room = (el.dataset.room || '').toLowerCase();
+      const status = (el.dataset.status || '').toLowerCase();
+      const queryOk = !q || name.includes(q) || adviser.includes(q) || room.includes(q) || status.includes(q) || g.includes(q);
+      const gradeOk = !grade || grade === 'all grade levels' || g === grade.toLowerCase();
+      return queryOk && gradeOk;
+    }
+
+    function applyFilters(){
+      const q = (searchInput?.value || '').toLowerCase().trim();
+      const grade = gradeFilter?.value || '';
+      let total = 0, visibleCount = 0;
+      const cards = document.querySelectorAll('.section-card');
+      cards.forEach(card => {
+        total++;
+        const visible = cardMatches(card, q, grade);
+        card.style.display = visible ? '' : 'none';
+        if (visible) visibleCount++;
+      });
+      if (resultCount){ resultCount.textContent = `Showing ${visibleCount}${total ? ` of ${total}` : ''}`; }
+      if (emptyState){ emptyState.classList.toggle('hidden', visibleCount !== 0); }
+    }
+
+    // Wire events
+    addBtn?.addEventListener('click', openModal);
+    closeBtn?.addEventListener('click', closeModal);
+    cancelBtn?.addEventListener('click', closeModal);
+    backdrop?.addEventListener('click', closeModal);
+    document.addEventListener('keydown', (e)=>{
+      if (e.key === 'Escape' && !modal.classList.contains('hidden')) closeModal();
+    });
+    searchInput?.addEventListener('input', applyFilters);
+    gradeFilter?.addEventListener('change', applyFilters);
+
+    // Remove handler (demo)
+    grid?.addEventListener('click', (e)=>{
+      const rmBtn = e.target.closest('.remove-section');
+      if (rmBtn){
+        const card = rmBtn.closest('.section-card');
+        const name = card?.dataset.name || 'this section';
+        if (confirm(`Remove ${name}? This cannot be undone in demo mode.`)){
+          card?.remove();
+        }
+      }
+    });
+
+    // Add/save (demo): create a new card in the grid
+    form?.addEventListener('submit', (e)=>{
+      e.preventDefault();
+      const name = document.getElementById('sec-name')?.value?.trim();
+      const grade = document.getElementById('sec-grade')?.value?.trim();
+      if (!name || !grade){
+        alert('Please provide Section Name and Grade Level.');
+        return;
+      }
+      const adviser = document.getElementById('sec-adviser')?.value?.trim() || '—';
+      const capacity = document.getElementById('sec-capacity')?.value?.trim() || '';
+      const room = document.getElementById('sec-room')?.value?.trim() || '—';
+      const status = document.getElementById('sec-status')?.value || 'Active';
+      const studentsText = capacity ? `0/${capacity}` : '0';
+      const progressClass = gradeAccentClass(grade).bar;
+      const card = document.createElement('div');
+      card.className = 'section-card rounded-xl border border-slate-200 bg-white shadow-sm hover:shadow-md transition p-4';
+      card.dataset.name = name;
+      card.dataset.grade = grade;
+      card.dataset.adviser = adviser;
+      card.dataset.room = room;
+      card.dataset.status = status;
+      if (capacity){ card.dataset.capacity = capacity; card.dataset.students = '0'; }
+      card.innerHTML = `
+        <div class="flex items-start justify-between">
+          <div>
+            <div class="text-sm text-slate-500">${grade}</div>
+            <h3 class="text-lg font-semibold text-slate-900">${name}</h3>
+          </div>
+          <span class="px-2 py-1 rounded-full text-[10px] font-semibold ${status.toLowerCase()==='active' ? 'bg-green-100 text-green-700' : 'bg-slate-200 text-slate-700'}">${status}</span>
+        </div>
+        <div class="mt-3 grid grid-cols-2 gap-3 text-sm">
+          <div>
+            <div class="text-slate-500 flex items-center gap-1"><svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A4 4 0 018 17h8a4 4 0 012.879 1.196M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg> Adviser</div>
+            <div class="font-medium text-slate-900">${adviser}</div>
+          </div>
+          <div>
+            <div class="text-slate-500 flex items-center gap-1"><svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5V4H2v16h5M7 20V10m10 10V10M7 10l5-6 5 6"/></svg> Students</div>
+            <div class="font-medium text-slate-900">${studentsText}</div>
+            ${capacity ? `<div class="mt-1 h-1.5 bg-slate-100 rounded"><div class="capacity-bar h-1.5 ${progressClass} rounded" style="width: 0%"></div></div>` : ''}
+          </div>
+          <div>
+            <div class="text-slate-500 flex items-center gap-1"><svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7l9-4 9 4-9 4-9-4zm0 0v10l9 4 9-4V7"/></svg> Room</div>
+            <div class="font-medium text-slate-900">${room}</div>
+          </div>
+        </div>
+        <div class="mt-4 flex items-center justify-end gap-2">
+          <button class="edit-section inline-flex items-center gap-1 px-3 py-1.5 text-xs rounded-lg border border-slate-300 text-slate-700 hover:bg-slate-50" title="Edit section"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536M4 20h4l10.5-10.5a2.121 2.121 0 10-3-3L5 17v3z"/></svg> Edit</button>
+          <button class="remove-section inline-flex items-center gap-1 px-3 py-1.5 text-xs rounded-lg bg-rose-600 text-white hover:bg-rose-700" title="Remove section"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6M9 7h6m2 0h-2m-6 0H7m2-2h6a2 2 0 012 2H7a2 2 0 012-2z"/></svg> Remove</button>
+        </div>
+      `;
+      grid?.prepend(card);
+      enhanceCard(card);
+      closeModal();
+      applyFilters();
+      alert(`Section created: ${name} (${grade})`);
+    });
+    // Enhance existing cards
+    document.querySelectorAll('.section-card').forEach(enhanceCard);
+    applyFilters();
+  })();
+</script>
 {% endblock %}

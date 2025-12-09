@@ -1,197 +1,223 @@
-<!-- File: schooladmin/subjects.html
-     Purpose: Subject management page for school administrators
--->
 {% extends 'schooladmin/base_admin.html' %}
 {% block title %}Manage Subjects — AttendGuard{% endblock %}
 
 {% block admin_content %}
-      <div class="bg-white rounded-xl shadow-md border border-slate-200 overflow-hidden">
-        <!-- Header -->
-        <div class="px-6 py-5 border-b border-slate-200 flex items-center justify-between flex-wrap gap-3">
-          <div>
-            <h1 class="text-2xl font-bold text-slate-900">Manage Subjects</h1>
-            <p class="text-slate-600 mt-1">Add, edit, and manage school subjects</p>
-          </div>
-          <button class="px-4 py-2.5 bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold rounded-lg shadow-sm hover:shadow-md transition-all flex items-center gap-2">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
-            Add Subject
-          </button>
-        </div>
+<div class="bg-white rounded-xl shadow-md border border-slate-200 overflow-hidden">
+  <!-- Header -->
+  <div class="px-6 py-5 border-b border-slate-200 flex items-center justify-between flex-wrap gap-3">
+    <div>
+      <h1 class="text-2xl font-bold text-slate-900">Manage Subjects</h1>
+      <p class="text-slate-600 mt-1">Add, edit, and manage school subjects</p>
+    </div>
+    <button id="add-subject-btn" class="px-4 py-2.5 bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold rounded-lg shadow-sm hover:shadow-md transition-all flex items-center gap-2">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
+      Add Subject
+    </button>
+  </div>
 
-        <!-- Search & Filter -->
-        <div class="px-6 py-4 bg-slate-50 border-b border-slate-200">
-          <div class="flex flex-wrap gap-3">
-            <div class="flex-1 min-w-[200px]">
-              <input type="text" placeholder="Search subjects..." class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-            </div>
-            <select class="px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-              <option>All Grade Levels</option>
+  <!-- Search & Filter -->
+  <div class="px-6 py-4 bg-slate-50 border-b border-slate-200 flex items-center gap-3 flex-wrap">
+    <div class="relative flex-1 min-w-[240px]">
+      <input id="subject-search" type="text" placeholder="Search subjects..." class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
+      <svg class="w-4 h-4 absolute right-3 top-2.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35M10 18a8 8 0 100-16 8 8 0 000 16z"/></svg>
+    </div>
+    <select id="grade-filter" class="px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+      <option>All Grade Levels</option>
+      <option>Grade 7</option>
+      <option>Grade 8</option>
+      <option>Grade 9</option>
+      <option>Grade 10</option>
+      <option>Grade 11</option>
+      <option>Grade 12</option>
+    </select>
+    <div class="ml-auto text-xs text-slate-600" id="subjects-count">&nbsp;</div>
+  </div>
+
+  <!-- Subjects Table -->
+  <div class="overflow-x-auto">
+    <table class="w-full">
+      <thead class="bg-slate-50 border-b border-slate-200">
+        <tr>
+          <th class="px-6 py-3 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">Subject Code</th>
+          <th class="px-6 py-3 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">Subject Name</th>
+          <th class="px-6 py-3 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">Grade Level</th>
+          <th class="px-6 py-3 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">Instructors</th>
+          <th class="px-6 py-3 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">Status</th>
+          <th class="px-6 py-3 text-right text-xs font-semibold text-slate-600 uppercase tracking-wider">Actions</th>
+        </tr>
+      </thead>
+      <tbody id="subjects-tbody" class="divide-y divide-slate-200">
+        {% for s in subjects %}
+        <tr class="subject-row hover:bg-slate-50 transition-colors" data-code="{{ s.code }}" data-name="{{ s.name }}" data-grade="{{ s.grade }}" data-status="{{ s.status }}">
+          <td class="px-6 py-4 whitespace-nowrap"><span class="font-mono text-sm font-medium text-slate-900">{{ s.code }}</span></td>
+          <td class="px-6 py-4"><span class="font-medium text-slate-900">{{ s.name }}</span></td>
+          <td class="px-6 py-4 whitespace-nowrap"><span class="text-sm text-slate-600">{{ s.grade }}</span></td>
+          <td class="px-6 py-4 whitespace-nowrap"><span class="text-sm text-slate-600">{{ s.instructors }} instructors</span></td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <span class="px-3 py-1 rounded-full text-xs font-medium {% if s.status=='Active' %}bg-emerald-100 text-emerald-800{% else %}bg-slate-200 text-slate-800{% endif %}">{{ s.status }}</span>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-right">
+            <button class="edit-subject text-blue-600 hover:text-blue-800 font-medium text-sm mr-3">Edit</button>
+            <button class="remove-subject text-red-600 hover:text-red-800 font-medium text-sm">Remove</button>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <div class="px-6 py-4 bg-slate-50 border-t border-slate-200 flex items-center justify-between">
+    <span class="text-sm text-slate-600">Showing <span id="subjects-visible">0</span> of <span id="subjects-total">0</span> subjects</span>
+    <div class="text-xs text-slate-500" id="subjects-count-aux"></div>
+  </div>
+</div>
+
+<!-- Add Subject Modal (Restored) -->
+<div id="subject-modal" class="fixed inset-0 z-50 hidden">
+  <div id="subject-backdrop" class="absolute inset-0 bg-slate-900/40"></div>
+  <div class="relative mx-auto w-full max-w-2xl mt-20 px-6">
+    <div class="bg-white rounded-xl shadow-2xl border border-slate-200 overflow-hidden">
+      <div class="px-6 py-4 border-b border-slate-200 flex items-center justify-between">
+        <div>
+          <h3 class="text-base font-semibold text-slate-900">Add Subject</h3>
+          <p class="text-xs text-slate-500">Create a new subject</p>
+        </div>
+        <button id="subject-close" type="button" class="p-2 text-slate-500 hover:text-slate-700">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <form id="subject-form" class="px-6 py-5 max-h-[70vh] overflow-y-auto">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label for="sub-code" class="block text-xs font-medium text-slate-700">Subject Code<span class="text-rose-500"> *</span></label>
+            <input id="sub-code" name="code" type="text" required placeholder="e.g., MATH101" class="mt-1 w-full px-3 py-2 text-sm rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
+          </div>
+          <div>
+            <label for="sub-name" class="block text-xs font-medium text-slate-700">Subject Name<span class="text-rose-500"> *</span></label>
+            <input id="sub-name" name="name" type="text" required placeholder="e.g., Mathematics" class="mt-1 w-full px-3 py-2 text-sm rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
+          </div>
+          <div>
+            <label for="sub-grade" class="block text-xs font-medium text-slate-700">Grade Level<span class="text-rose-500"> *</span></label>
+            <select id="sub-grade" name="grade" required class="mt-1 w-full px-3 py-2 text-sm rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+              <option value="">Select grade</option>
               <option>Grade 7</option>
               <option>Grade 8</option>
               <option>Grade 9</option>
               <option>Grade 10</option>
               <option>Grade 11</option>
               <option>Grade 12</option>
+              <option>All Grades</option>
+            </select>
+          </div>
+          <div>
+            <label for="sub-status" class="block text-xs font-medium text-slate-700">Status</label>
+            <select id="sub-status" name="status" class="mt-1 w-full px-3 py-2 text-sm rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+              <option>Active</option>
+              <option>Inactive</option>
             </select>
           </div>
         </div>
-
-        <!-- Subjects Table -->
-        <div class="overflow-x-auto">
-          <table class="w-full">
-            <thead class="bg-slate-50 border-b border-slate-200">
-              <tr>
-                <th class="px-6 py-3 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">Subject Code</th>
-                <th class="px-6 py-3 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">Subject Name</th>
-                <th class="px-6 py-3 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">Grade Level</th>
-                <th class="px-6 py-3 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">Instructors</th>
-                <th class="px-6 py-3 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">Status</th>
-                <th class="px-6 py-3 text-right text-xs font-semibold text-slate-600 uppercase tracking-wider">Actions</th>
-              </tr>
-            </thead>
-            <tbody class="divide-y divide-slate-200">
-              <tr class="hover:bg-slate-50 transition-colors">
-                <td class="px-6 py-4 whitespace-nowrap">
-                  <span class="font-mono text-sm font-medium text-slate-900">MATH101</span>
-                </td>
-                <td class="px-6 py-4">
-                  <span class="font-medium text-slate-900">Mathematics</span>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap">
-                  <span class="text-sm text-slate-600">Grade 10</span>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap">
-                  <span class="text-sm text-slate-600">5 instructors</span>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap">
-                  <span class="px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">Active</span>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap text-right">
-                  <button class="text-blue-600 hover:text-blue-800 font-medium text-sm mr-3">Edit</button>
-                  <button class="text-red-600 hover:text-red-800 font-medium text-sm">Remove</button>
-                </td>
-              </tr>
-              <tr class="hover:bg-slate-50 transition-colors">
-                <td class="px-6 py-4 whitespace-nowrap">
-                  <span class="font-mono text-sm font-medium text-slate-900">ENG101</span>
-                </td>
-                <td class="px-6 py-4">
-                  <span class="font-medium text-slate-900">English Language</span>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap">
-                  <span class="text-sm text-slate-600">Grade 10</span>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap">
-                  <span class="text-sm text-slate-600">4 instructors</span>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap">
-                  <span class="px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">Active</span>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap text-right">
-                  <button class="text-blue-600 hover:text-blue-800 font-medium text-sm mr-3">Edit</button>
-                  <button class="text-red-600 hover:text-red-800 font-medium text-sm">Remove</button>
-                </td>
-              </tr>
-              <tr class="hover:bg-slate-50 transition-colors">
-                <td class="px-6 py-4 whitespace-nowrap">
-                  <span class="font-mono text-sm font-medium text-slate-900">SCI101</span>
-                </td>
-                <td class="px-6 py-4">
-                  <span class="font-medium text-slate-900">Science</span>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap">
-                  <span class="text-sm text-slate-600">Grade 10</span>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap">
-                  <span class="text-sm text-slate-600">6 instructors</span>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap">
-                  <span class="px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">Active</span>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap text-right">
-                  <button class="text-blue-600 hover:text-blue-800 font-medium text-sm mr-3">Edit</button>
-                  <button class="text-red-600 hover:text-red-800 font-medium text-sm">Remove</button>
-                </td>
-              </tr>
-              <tr class="hover:bg-slate-50 transition-colors">
-                <td class="px-6 py-4 whitespace-nowrap">
-                  <span class="font-mono text-sm font-medium text-slate-900">HIST101</span>
-                </td>
-                <td class="px-6 py-4">
-                  <span class="font-medium text-slate-900">History</span>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap">
-                  <span class="text-sm text-slate-600">Grade 10</span>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap">
-                  <span class="text-sm text-slate-600">3 instructors</span>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap">
-                  <span class="px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">Active</span>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap text-right">
-                  <button class="text-blue-600 hover:text-blue-800 font-medium text-sm mr-3">Edit</button>
-                  <button class="text-red-600 hover:text-red-800 font-medium text-sm">Remove</button>
-                </td>
-              </tr>
-              <tr class="hover:bg-slate-50 transition-colors">
-                <td class="px-6 py-4 whitespace-nowrap">
-                  <span class="font-mono text-sm font-medium text-slate-900">CS101</span>
-                </td>
-                <td class="px-6 py-4">
-                  <span class="font-medium text-slate-900">Computer Science</span>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap">
-                  <span class="text-sm text-slate-600">Grade 11</span>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap">
-                  <span class="text-sm text-slate-600">2 instructors</span>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap">
-                  <span class="px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">Active</span>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap text-right">
-                  <button class="text-blue-600 hover:text-blue-800 font-medium text-sm mr-3">Edit</button>
-                  <button class="text-red-600 hover:text-red-800 font-medium text-sm">Remove</button>
-                </td>
-              </tr>
-              <tr class="hover:bg-slate-50 transition-colors">
-                <td class="px-6 py-4 whitespace-nowrap">
-                  <span class="font-mono text-sm font-medium text-slate-900">PE101</span>
-                </td>
-                <td class="px-6 py-4">
-                  <span class="font-medium text-slate-900">Physical Education</span>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap">
-                  <span class="text-sm text-slate-600">All Grades</span>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap">
-                  <span class="text-sm text-slate-600">4 instructors</span>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap">
-                  <span class="px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">Active</span>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap text-right">
-                  <button class="text-blue-600 hover:text-blue-800 font-medium text-sm mr-3">Edit</button>
-                  <button class="text-red-600 hover:text-red-800 font-medium text-sm">Remove</button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+        <div class="mt-6 pt-4 border-t border-slate-200 flex items-center justify-end gap-3">
+          <button type="button" id="subject-cancel" class="px-3 py-2 text-xs rounded-lg border border-slate-300 text-slate-700 hover:bg-slate-50">Cancel</button>
+          <button type="submit" class="px-3 py-2 text-xs rounded-lg bg-blue-600 text-white hover:bg-blue-700">Save</button>
         </div>
-
-        <!-- Pagination -->
-        <div class="px-6 py-4 bg-slate-50 border-t border-slate-200 flex items-center justify-between">
-          <span class="text-sm text-slate-600">Showing 1 to 6 of 24 subjects</span>
-          <div class="flex gap-2">
-            <button class="px-3 py-1 border border-slate-300 rounded-lg text-sm font-medium text-slate-600 hover:bg-white">Previous</button>
-            <button class="px-3 py-1 bg-blue-600 text-white rounded-lg text-sm font-medium">1</button>
-            <button class="px-3 py-1 border border-slate-300 rounded-lg text-sm font-medium text-slate-600 hover:bg-white">2</button>
-            <button class="px-3 py-1 border border-slate-300 rounded-lg text-sm font-medium text-slate-600 hover:bg-white">3</button>
-            <button class="px-3 py-1 border border-slate-300 rounded-lg text-sm font-medium text-slate-600 hover:bg-white">Next</button>
-          </div>
-        </div>
-      </div>
+      </form>
     </div>
   </div>
+  </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function(){
+  const searchInput = document.getElementById('subject-search');
+  const gradeFilter = document.getElementById('grade-filter');
+  const tbody = document.getElementById('subjects-tbody');
+  const rows = () => Array.from(tbody?.querySelectorAll('.subject-row') || []);
+  const visibleEl = document.getElementById('subjects-visible');
+  const totalEl = document.getElementById('subjects-total');
+  const countEl = document.getElementById('subjects-count');
+
+  function applyFilters(){
+    const q = (searchInput?.value || '').toLowerCase().trim();
+    const grade = gradeFilter?.value || 'All Grade Levels';
+    let visible = 0;
+    rows().forEach(r => {
+      const code = (r.dataset.code || '').toLowerCase();
+      const name = (r.dataset.name || '').toLowerCase();
+      const rgrade = r.dataset.grade || '';
+      const matchText = !q || code.includes(q) || name.includes(q);
+      const matchGrade = grade === 'All Grade Levels' || rgrade === grade;
+      const show = matchText && matchGrade;
+      r.style.display = show ? '' : 'none';
+      if (show) visible++;
+    });
+    if (visibleEl) visibleEl.textContent = String(visible);
+    if (totalEl) totalEl.textContent = String(rows().length);
+    if (countEl) countEl.textContent = visible + ' shown';
+  }
+
+  searchInput?.addEventListener('input', applyFilters);
+  gradeFilter?.addEventListener('change', applyFilters);
+
+  // Modal handling
+  // Restore modal refs
+  const modal = document.getElementById('subject-modal');
+  const backdrop = document.getElementById('subject-backdrop');
+  const openBtn = document.getElementById('add-subject-btn');
+  const closeBtn = document.getElementById('subject-close');
+  const cancelBtn = document.getElementById('subject-cancel');
+  const form = document.getElementById('subject-form');
+
+  function openModal(){ modal?.classList.remove('hidden'); document.body.classList.add('overflow-hidden'); }
+  function closeModal(){ modal?.classList.add('hidden'); document.body.classList.remove('overflow-hidden'); form?.reset(); }
+
+  openBtn?.addEventListener('click', openModal);
+  backdrop?.addEventListener('click', closeModal);
+  closeBtn?.addEventListener('click', closeModal);
+  cancelBtn?.addEventListener('click', closeModal);
+  document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeModal(); });
+
+  form?.addEventListener('submit', (e)=>{
+    e.preventDefault();
+    const code = document.getElementById('sub-code').value.trim();
+    const name = document.getElementById('sub-name').value.trim();
+    const grade = document.getElementById('sub-grade').value.trim() || 'All Grades';
+    const status = document.getElementById('sub-status').value.trim() || 'Active';
+    if (!code || !name) { alert('Please fill out required fields.'); return; }
+
+    // Add a new table row (demo only)
+    const tr = document.createElement('tr');
+    tr.className = 'subject-row hover:bg-slate-50 transition-colors';
+    tr.dataset.code = code; tr.dataset.name = name; tr.dataset.grade = grade; tr.dataset.status = status;
+    tr.innerHTML = `
+      <td class=\"px-6 py-4 whitespace-nowrap\"><span class=\"font-mono text-sm font-medium text-slate-900\">${code}</span></td>
+      <td class=\"px-6 py-4\"><span class=\"font-medium text-slate-900\">${name}</span></td>
+      <td class=\"px-6 py-4 whitespace-nowrap\"><span class=\"text-sm text-slate-600\">${grade}</span></td>
+      <td class=\"px-6 py-4 whitespace-nowrap\"><span class=\"text-sm text-slate-600\">0 instructors</span></td>
+      <td class=\"px-6 py-4 whitespace-nowrap\">
+        <span class=\"px-3 py-1 rounded-full text-xs font-medium ${status==='Active' ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-200 text-slate-800'}\">${status}</span>
+      </td>
+      <td class=\"px-6 py-4 whitespace-nowrap text-right\">
+        <button class=\"edit-subject text-blue-600 hover:text-blue-800 font-medium text-sm mr-3\">Edit</button>
+        <button class=\"remove-subject text-red-600 hover:text-red-800 font-medium text-sm\">Remove</button>
+      </td>`;
+    tbody.appendChild(tr);
+    closeModal();
+    applyFilters();
+    alert('Subject added (demo). Hook up backend to persist.');
+  });
+
+  // Remove action (demo)
+  document.addEventListener('click', (e)=>{
+    const btn = e.target.closest('.remove-subject');
+    if (!btn) return;
+    const row = btn.closest('tr');
+    if (row) { row.remove(); applyFilters(); }
+  });
+
+  // Initial counts
+  applyFilters();
+})();
+</script>
 {% endblock %}
